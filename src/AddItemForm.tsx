@@ -1,4 +1,6 @@
 import React, { ChangeEvent, KeyboardEvent, FC, useState } from "react";
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 type AddItemFormProps = {
    // title:string
@@ -28,16 +30,27 @@ export const AddItemForm: FC<AddItemFormProps> = (props) => {
          setError("Title is required");
       }
    }
-
+   const styles = {
+      maxWidth: '38px',
+      maxHeight: '38px',
+      minWidth: '38px',
+      minHeight: '38px',
+   }
    return (
       <div>
-         <input value={title}
+         <TextField id="outlined-basic" label={error ? error: "Outlined"} variant="outlined"
+            value={title}
+            onChange={onChangeHandler}
+            onKeyPress={onKeyPressHandler}
+            size="small"
+            error={!!error}
+         />
+         {/* <input value={title}
             onChange={onChangeHandler}
             onKeyPress={onKeyPressHandler}
             className={error ? "error" : ""}
-         />
-         <button onClick={addTask}>+</button>
-         {error && <div className="error-message">{error}</div>}
+         /> */}
+         <Button onClick={addTask} size="small" variant="contained" style={styles}>+</Button>
       </div>
    );
 };
