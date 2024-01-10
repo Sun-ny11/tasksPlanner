@@ -1,4 +1,4 @@
-import React, { useReducer} from 'react';
+import React, { useReducer } from 'react';
 import './App.css';
 import { TaskType, Todolist } from './Todolist';
 import { v1 } from 'uuid';
@@ -7,7 +7,7 @@ import Btn from './Btn';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import { addTaskAC, addTaskForNewTodoAC, changeStatusAC, removeTaskAC, tasksReducer, updateTaskAC } from './reducers/tasksReducer';
+import { addTaskAC, changeStatusAC, removeTaskAC, tasksReducer, updateTaskAC } from './reducers/tasksReducer';
 import { addTodolistAC, changeFilterAC, removeTodolistAC, todolistsReducer, updateTodolistAC } from './reducers/todolistsReducer';
 
 export type FilterValuesType = "all" | "active" | "completed";
@@ -75,9 +75,9 @@ function App() {
         delete tasks[todolistID]
     }
     const addTodolist = (title: string) => {
-        const id = v1()
-        dispatchTodolists(addTodolistAC(title, id))
-        dispatchTasks(addTaskForNewTodoAC(id))
+        const AC = addTodolistAC(title)
+        dispatchTodolists(AC)
+        dispatchTasks(AC)
         // 
         // setTodolists([...todolists, newTodo])
         // setTasks({ ...tasks, [newTodo.id]: [] })
