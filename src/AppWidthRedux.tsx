@@ -1,14 +1,12 @@
-import React, { useReducer } from 'react';
+import React, { useCallback } from 'react';
 import './App.css';
-import { TaskType, Todolist } from './Todolist';
-import { v1 } from 'uuid';
+import { TaskType } from './Todolist';
 import { AddItemForm } from './AddItemForm';
 import Btn from './Btn';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import { addTaskAC, changeStatusAC, removeTaskAC, tasksReducer, updateTaskAC } from './reducers/tasksReducer';
-import { addTodolistAC, changeFilterAC, removeTodolistAC, todolistsReducer, updateTodolistAC } from './reducers/todolistsReducer';
+import { addTodolistAC } from './reducers/todolistsReducer';
 import { useSelector } from 'react-redux';
 import { AppRootStateType } from './reducers/store';
 import { useDispatch } from 'react-redux';
@@ -22,14 +20,14 @@ export type taskTodoType = {
 }
 
 function AppWidthRedux() {
+    // console.log("AppWidthRedux");
 
     let todolists = useSelector<AppRootStateType, todolistsType[]>(state => state.todolists)
-    const dicpatch = useDispatch()
+    const dispatch = useDispatch()
 
-    const addTodolist = (title: string) => {
-        const AC = addTodolistAC(title)
-        dicpatch(addTodolistAC(title))
-    }
+    const addTodolist = useCallback((title: string) => {
+        dispatch(addTodolistAC(title))
+    }, [dispatch])
 
     return (
         <div className="App">

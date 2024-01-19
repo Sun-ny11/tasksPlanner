@@ -1,4 +1,4 @@
-import React, { ChangeEvent, KeyboardEvent, FC, useState } from "react";
+import React, { ChangeEvent, KeyboardEvent, FC, useState, memo } from "react";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
@@ -7,7 +7,9 @@ type AddItemFormProps = {
    collBack: (title: string) => void
 }
 
-export const AddItemForm: FC<AddItemFormProps> = (props) => {
+export const AddItemForm: FC<AddItemFormProps> = memo((props) => {
+   console.log("AddItemForm");
+
    let [title, setTitle] = useState("")
    let [error, setError] = useState<string | null>(null)
 
@@ -16,7 +18,7 @@ export const AddItemForm: FC<AddItemFormProps> = (props) => {
    }
 
    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-      setError(null);
+      if (error) setError(null);
       if (e.charCode === 13) {
          addTask();
       }
@@ -38,7 +40,7 @@ export const AddItemForm: FC<AddItemFormProps> = (props) => {
    }
    return (
       <div>
-         <TextField id="outlined-basic" label={error ? error: "Outlined"} variant="outlined"
+         <TextField id="outlined-basic" label={error ? error : "Outlined"} variant="outlined"
             value={title}
             onChange={onChangeHandler}
             onKeyPress={onKeyPressHandler}
@@ -53,4 +55,4 @@ export const AddItemForm: FC<AddItemFormProps> = (props) => {
          <Button onClick={addTask} size="small" variant="contained" style={styles}>+</Button>
       </div>
    );
-};
+})
