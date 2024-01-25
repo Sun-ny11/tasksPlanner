@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import './App.css';
-import { TaskType } from './Todolist';
-import { AddItemForm } from './AddItemForm';
-import Btn from './Btn';
+import { TaskType } from './Components/todoList/Todolist';
+import { AddItemForm } from './Components/management/AddItemForm';
+import Btn from './Components/management/Btn';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
@@ -10,7 +10,7 @@ import { addTodolistAC } from './reducers/todolistsReducer';
 import { useSelector } from 'react-redux';
 import { AppRootStateType } from './reducers/store';
 import { useDispatch } from 'react-redux';
-import { TodolistWithReducer } from './TodolistWithReducer';
+import { TodolistWithReducer } from './Components/todoList/TodolistWithReducer';
 
 export type FilterValuesType = "all" | "active" | "completed";
 export type todolistsType = { id: string, title: string, filter: FilterValuesType }

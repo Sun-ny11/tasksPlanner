@@ -1,11 +1,11 @@
 import React from 'react';
-import { FilterValuesType, todolistsType } from './App';
-import { AddItemForm } from './AddItemForm';
-import { EditableSpan } from './EditableSpan';
+import { FilterValuesType, todolistsType } from '../../App';
+import { AddItemForm } from '../management/AddItemForm';
+import { EditableSpan } from '../management/EditableSpan';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from "@mui/icons-material/Delete";
 import Button from '@mui/material/Button';
-import { CheckBox } from './CheckBox';
+import { CheckBox } from '../management/CheckBox';
 // import { title } from 'process';
 
 export type TaskType = {

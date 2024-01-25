@@ -1,13 +1,13 @@
-import React, { FC, memo, useCallback } from "react";
-import { CheckBox } from "./CheckBox";
-import { EditableSpan } from "./EditableSpan";
+import React, { FC, memo} from "react";
+import { CheckBox } from "../../management/CheckBox";
+import { EditableSpan } from "../../management/EditableSpan";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from "@mui/icons-material/Delete";
-import { changeStatusAC, removeTaskAC, updateTaskAC } from "./reducers/tasksReducer";
+import { changeStatusAC, removeTaskAC, updateTaskAC } from "../../../reducers/tasksReducer";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { TaskType } from "./Todolist";
-import { AppRootStateType } from "./reducers/store";
+import { TaskType } from "../Todolist";
+import { AppRootStateType } from "../../../reducers/store";
 
 type TaskProps = {
    todolistID: string

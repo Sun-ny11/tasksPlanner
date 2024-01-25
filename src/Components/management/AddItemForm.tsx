@@ -2,7 +2,7 @@ import React, { ChangeEvent, KeyboardEvent, FC, useState, memo } from "react";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-type AddItemFormProps = {
+export type AddItemFormProps = {
    // title:string
    collBack: (title: string) => void
 }
