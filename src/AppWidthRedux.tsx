@@ -1,19 +1,23 @@
 import React, { useCallback } from 'react';
 import './App.css';
-import { TaskType } from './Components/todoList/Todolist';
+// import { TaskType } from './Components/todoList/Todolist';
 import { AddItemForm } from './Components/management/AddItemForm';
 import Btn from './Components/management/Btn';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import { addTodolistAC } from './reducers/todolistsReducer';
+import { TodolistsDomainType, addTodolistAC } from './reducers/todolistsReducer';
 import { useSelector } from 'react-redux';
 import { AppRootStateType } from './reducers/store';
 import { useDispatch } from 'react-redux';
 import { TodolistWithReducer } from './Components/todoList/TodolistWithReducer';
+import { TaskType } from './api/todolists-api';
 
-export type FilterValuesType = "all" | "active" | "completed";
-export type todolistsType = { id: string, title: string, filter: FilterValuesType }
+// export type FilterValuesType = "all" | "active" | "completed";
+// export type todolistsType = { 
+//     id: string
+//     title: string
+//     filter: FilterValuesType }
 
 export type taskTodoType = {
     [key: string]: TaskType[]
@@ -22,7 +26,7 @@ export type taskTodoType = {
 function AppWidthRedux() {
     // console.log("AppWidthRedux");
 
-    let todolists = useSelector<AppRootStateType, todolistsType[]>(state => state.todolists)
+    let todolists = useSelector<AppRootStateType, TodolistsDomainType[]>(state => state.todolists)
     const dispatch = useDispatch()
 
     const addTodolist = useCallback((title: string) => {
@@ -51,11 +55,7 @@ function AppWidthRedux() {
                         </Grid>
                     })}
                 </Grid>
-
             </Container>
-
-
-
         </div>
     );
 }

@@ -1,8 +1,9 @@
 import { v1 } from 'uuid';
-import { taskTodoType } from '../App';
 import { addTodolistACType, removeTodolistACType } from './todolistsReducer';
+import { taskTodoType } from '../AppWidthRedux';
+import { TaskPriorities, TaskStatus, TaskType } from '../api/todolists-api';
 
-const initialState:taskTodoType = {}
+const initialState: taskTodoType = {}
 
 export const tasksReducer = (state: taskTodoType = initialState, action: taskReducerType): taskTodoType => {
    switch (action.type) {
@@ -13,7 +14,17 @@ export const tasksReducer = (state: taskTodoType = initialState, action: taskRed
          }
       }
       case "ADD-TASK": {
-         let newTask = { id: v1(), title: action.payload.title, isDone: false };
+         let newTask: TaskType = {
+            id: v1(),
+            title: action.payload.title, description: "",
+            todoListId: action.payload.todolistID,
+            status: TaskStatus.New,
+            order: 0,
+            priority: TaskPriorities.Low,
+            startDate: "",
+            deadline: "",
+            addedDate: ""
+         };
          return {
             ...state,
             [action.payload.todolistID]: [newTask, ...state[action.payload.todolistID]]
@@ -22,7 +33,7 @@ export const tasksReducer = (state: taskTodoType = initialState, action: taskRed
       case 'CHANGE-STATUS': {
          return {
             ...state,
-            [action.payload.todolistID]: state[action.payload.todolistID].map(el => el.id === action.payload.taskId ? { ...el, isDone: action.payload.isDone } : el)
+            [action.payload.todolistID]: state[action.payload.todolistID].map(el => el.id === action.payload.taskId ? { ...el, status: action.payload.status } : el)
          }
       }
       case "UPDATE-TASK": {
@@ -72,13 +83,13 @@ export const addTaskAC = (todolistID: string, title: string) => {
 }
 
 type changeStatusACType = ReturnType<typeof changeStatusAC>
-export const changeStatusAC = (todolistID: string, taskId: string, isDone: boolean) => {
+export const changeStatusAC = (todolistID: string, taskId: string, status: number) => {
    return {
       type: "CHANGE-STATUS",
       payload: {
          todolistID,
          taskId,
-         isDone
+         status
       }
    } as const
 }

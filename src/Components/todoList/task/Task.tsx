@@ -1,4 +1,4 @@
-import React, { FC, memo} from "react";
+import React, { FC, memo } from "react";
 import { CheckBox } from "../../management/CheckBox";
 import { EditableSpan } from "../../management/EditableSpan";
 import IconButton from '@mui/material/IconButton';
@@ -6,8 +6,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { changeStatusAC, removeTaskAC, updateTaskAC } from "../../../reducers/tasksReducer";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { TaskType } from "../Todolist";
 import { AppRootStateType } from "../../../reducers/store";
+import { TaskStatus, TaskType } from "../../../api/todolists-api";
 
 type TaskProps = {
    todolistID: string
@@ -26,14 +26,14 @@ export const Task: FC<TaskProps> = memo(({ todolistID, taskID }) => {
       dispatch(updateTaskAC(todolistID, title, taskID))
    }
 
-   const onChangeHandler = (isDone: boolean) => {
-      dispatch(changeStatusAC(todolistID, taskID, isDone))
+   const onChangeHandler = (status: boolean) => {
+      dispatch(changeStatusAC(todolistID, taskID, status === true ? TaskStatus.Completed : TaskStatus.New))
    }
 
    return (
-      <li className={task.isDone ? "is-done" : ""}>
+      <li className={task.status ? "is-done" : ""}>
 
-         <CheckBox onChange={onChangeHandler} checked={task.isDone} />
+         <CheckBox onChangeCallBack={onChangeHandler} checked={task.status === TaskStatus.Completed ? true : false} />
          <EditableSpan oldTitle={task.title} collBack={newTitleHandler} />
 
          <IconButton aria-label="delete" onClick={onClickHandler}>

@@ -5,6 +5,7 @@ import { tasksReducer } from "./tasksReducer";
 import { todolistsReducer } from "./todolistsReducer";
 import { v1 } from "uuid";
 import { AppRootStateType } from "./store";
+import { TaskPriorities, TaskStatus } from "../api/todolists-api";
 
 const rootReducer = combineReducers({
    tasks: tasksReducer,
@@ -13,19 +14,61 @@ const rootReducer = combineReducers({
 
 const initialGlobalState = {
    todolists: [
-      { id: "todolistId1", title: "What to learn", filter: "all" },
-      { id: "todolistId2", title: "What to buy", filter: "all" }
+      { id: "todolistId1", title: "What to learn", addedDate: "", order: 0, filter: "all" },
+      { id: "todolistId2", title: "What to buy", addedDate: "", order: 0, filter: "all" }
    ],
    tasks: {
       ["todolistId1"]: [
-         { id: v1(), title: "HTML&CSS", isDone: true },
-         { id: v1(), title: "JS", isDone: false }
+         {
+            id: v1(),
+            title: "HTML&CSS",
+            description: "",
+            todoListId: "todolistId1",
+            status: TaskStatus.Completed,
+            order: 0,
+            priority: TaskPriorities.Low,
+            startDate: "",
+            deadline: "",
+            addedDate: ""
+         },
+         {
+            id: v1(),
+            title: "JS",
+            description: "",
+            todoListId: "todolistId1",
+            status: TaskStatus.New,
+            order: 0,
+            priority: TaskPriorities.Low,
+            startDate: "",
+            deadline: "",
+            addedDate: ""
+         },
       ],
       ["todolistId2"]: [
          {
-            id: v1(), title: "Milk", isDone: false
+            id: v1(),
+            title: "Milk",
+            description: "",
+            todoListId: "todolistId2",
+            status: TaskStatus.New,
+            order: 0,
+            priority: TaskPriorities.Low,
+            startDate: "",
+            deadline: "",
+            addedDate: ""
          },
-         { id: v1(), title: "React Book", isDone: true }
+         {
+            id: v1(),
+            title: "React Book",
+            description: "",
+            todoListId: "todolistId2",
+            status: TaskStatus.Completed,
+            order: 0,
+            priority: TaskPriorities.Low,
+            startDate: "",
+            deadline: "",
+            addedDate: ""
+         },
       ]
    }
 };
