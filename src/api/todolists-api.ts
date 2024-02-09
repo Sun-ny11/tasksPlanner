@@ -47,15 +47,14 @@ type GetTaskResponseType = {
    error: string | null
 }
 
-type modelType = {
+export type modelType = {
    title: string
-   description: string
-   completed: boolean
+   description: string | null
    status: number
    priority: number
-   startDate: string
-   deadline: string
-}
+   startDate: string | null
+   deadline: string | null
+}//нужен ли NULL ?
 
 const settings = { withCredentials: true }
 
@@ -89,7 +88,7 @@ export const todolistsAPI = {
       return instance.get<GetTaskResponseType>(`/todo-lists/${todolistID}/tasks`)
    },
    createTask(todolistID: string, title: string) {
-      return instance.post<ResponseType<TaskType>>(`/todo-lists/${todolistID}/tasks`, { title: title })
+      return instance.post<ResponseType<{ item: TaskType }>>(`/todo-lists/${todolistID}/tasks`, { title: title })
       //Will return promise
       //CREATE
    },
@@ -97,6 +96,6 @@ export const todolistsAPI = {
       return instance.delete<ResponseType>(`/todo-lists/${todolistID}/tasks/${taskID}`)
    },
    updateTask(todolistID: string, taskID: string, model: modelType) {
-      return instance.put<ResponseType>(`/todo-lists/${todolistID}/tasks/${taskID}`, model)
+      return instance.put<ResponseType<{ item: TaskType }>>(`/todo-lists/${todolistID}/tasks/${taskID}`, model)
    }
 }

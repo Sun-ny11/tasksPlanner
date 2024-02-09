@@ -3,11 +3,13 @@ import { CheckBox } from "../../management/CheckBox";
 import { EditableSpan } from "../../management/EditableSpan";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from "@mui/icons-material/Delete";
-import { changeStatusAC, removeTaskAC, updateTaskAC } from "../../../reducers/tasksReducer";
+import { removeTaskTC, updateTaskTC } from "../../../reducers/tasksReducer";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { AppRootStateType } from "../../../reducers/store";
 import { TaskStatus, TaskType } from "../../../api/todolists-api";
+import { ThunkDispatch } from "redux-thunk";
+import { AnyAction } from "redux";
 
 type TaskProps = {
    todolistID: string
@@ -17,17 +19,17 @@ type TaskProps = {
 export const Task: FC<TaskProps> = memo(({ todolistID, taskID }) => {
 
    const task = useSelector<AppRootStateType, TaskType>(state => state.tasks[todolistID].filter(t => t.id === taskID)[0])
-   const dispatch = useDispatch()
+   const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch()
 
 
-   const onClickHandler = () => dispatch(removeTaskAC(todolistID, taskID))
+   const onClickHandler = () => dispatch(removeTaskTC(todolistID, taskID))
 
    const newTitleHandler = (title: string) => {
-      dispatch(updateTaskAC(todolistID, title, taskID))
+      dispatch(updateTaskTC(todolistID, { title }, taskID))
    }
 
    const onChangeHandler = (status: boolean) => {
-      dispatch(changeStatusAC(todolistID, taskID, status === true ? TaskStatus.Completed : TaskStatus.New))
+      dispatch(updateTaskTC(todolistID, { status: status === true ? TaskStatus.Completed : TaskStatus.New }, taskID))
    }
 
    return (

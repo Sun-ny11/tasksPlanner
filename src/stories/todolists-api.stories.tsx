@@ -130,13 +130,12 @@ export const UpdateTask = () => {
 
    const updateTask = () => {
       todolistsAPI.updateTask(todoID, taskID, {
-         title: title,
-         description: description,
-         completed: completed,
-         status: status,
-         priority: priority,
-         startDate: startDate,
-         deadline: deadline,
+         title: "title",
+         description: "description",
+         status: 0,
+         priority: 0,
+         startDate: "startDate",
+         deadline: "deadline",
       })
          .then((res) => {
             console.log(res);

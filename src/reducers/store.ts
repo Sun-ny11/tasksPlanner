@@ -1,7 +1,8 @@
 
-import {combineReducers, createStore, legacy_createStore} from 'redux';
+import { applyMiddleware, combineReducers, legacy_createStore } from 'redux';
 import { tasksReducer } from './tasksReducer';
 import { todolistsReducer } from './todolistsReducer';
+import { thunk } from 'redux-thunk';
 
 // объединяя reducer-ы с помощью combineReducers,
 // мы задаём структуру нашего единственного объекта-состояния
@@ -10,7 +11,7 @@ const rootReducer = combineReducers({
    todolists: todolistsReducer
 })
 // непосредственно создаём store
-export const store = legacy_createStore(rootReducer);
+export const store = legacy_createStore<any,any>(rootReducer, applyMiddleware(thunk));
 // определить автоматически тип всего объекта состояния
 export type AppRootStateType = ReturnType<typeof rootReducer>
 
