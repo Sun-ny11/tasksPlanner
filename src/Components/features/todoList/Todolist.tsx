@@ -1,17 +1,17 @@
 import React, { memo, useCallback, useEffect, useMemo } from 'react';
-import { AddItemForm } from '../management/AddItemForm';
-import { EditableSpan } from '../management/EditableSpan';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from 'react-redux';
-import { AppRootStateType } from '../../reducers/store';
-import { FilterValuesType, changeFilterAC, removeTodolistTC, updateTodolistTC } from '../../reducers/todolistsReducer';
-import { addTaskTC, setTaskTC } from '../../reducers/tasksReducer';
 import { Task } from './task/Task';
-import { ButtonWithRedux } from '../management/ButtonWithRedux';
-import { TaskStatus, TaskType } from '../../api/todolists-api';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
+import { FilterValuesType, changeFilterAC, removeTodolistTC, updateTodolistTC } from '../../../reducers/todolistsReducer';
+import { AppRootStateType } from '../../../reducers/store';
+import { TaskStatus, TaskType } from '../../../api/todolists-api';
+import { addTaskTC, setTaskTC } from '../../../reducers/tasksReducer';
+import { EditableSpan } from '../../management/EditableSpan';
+import { AddItemForm } from '../../management/AddItemForm';
+import { ButtonWithRedux } from '../../management/ButtonWithRedux';
 
 
 type PropsType = {
@@ -20,8 +20,8 @@ type PropsType = {
     filter: FilterValuesType
 }
 
-export const TodolistWithReducer = memo((props: PropsType) => {
-    console.log("TodolistWithReducer " + props.title);
+export const Todolist = memo((props: PropsType) => {
+    console.log("Todolist " + props.title);
 
     let tasks = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[props.todolistID])
     const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch()

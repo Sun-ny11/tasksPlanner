@@ -1,5 +1,7 @@
 import axios from "axios"
 
+//types
+
 export type todolistsType = {
    id: string
    title: string
@@ -56,6 +58,8 @@ export type modelType = {
    deadline: string | null
 }//нужен ли NULL ?
 
+
+
 const settings = { withCredentials: true }
 
 const instance = axios.create({
@@ -63,6 +67,9 @@ const instance = axios.create({
    ...settings
 })
 export const todolistsAPI = {
+
+   //todolist
+
    createTodolists(title: string) {
       return instance.post<ResponseType<{ item: todolistsType }>>("/todo-lists", { title: title })
       //Will return promise
@@ -84,13 +91,13 @@ export const todolistsAPI = {
       //DELETE
    },
 
+   //task
+   
    readTask(todolistID: string) {
       return instance.get<GetTaskResponseType>(`/todo-lists/${todolistID}/tasks`)
    },
    createTask(todolistID: string, title: string) {
       return instance.post<ResponseType<{ item: TaskType }>>(`/todo-lists/${todolistID}/tasks`, { title: title })
-      //Will return promise
-      //CREATE
    },
    deleteTask(todolistID: string, taskID: string) {
       return instance.delete<ResponseType>(`/todo-lists/${todolistID}/tasks/${taskID}`)

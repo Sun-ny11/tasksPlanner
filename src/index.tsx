@@ -2,7 +2,7 @@ import React from 'react';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { createRoot } from 'react-dom/client';
-import AppWidthRedux from './AppWidthRedux';
+import App from './Components/app/App';
 import { Provider } from 'react-redux';
 import { store } from './reducers/store';
 
@@ -10,7 +10,7 @@ const container = document.getElementById('root') as HTMLElement
 const root = createRoot(container);
 root.render(
    <Provider store={store}>
-      <AppWidthRedux />
+      <App />
    </Provider>
 
 );

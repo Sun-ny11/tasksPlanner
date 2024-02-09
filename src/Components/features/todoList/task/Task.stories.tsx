@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Task } from './Task';
 import React from 'react';
-import { AppRootStateType} from '../../../reducers/store';
 import { useSelector } from 'react-redux';
-import { ReduxStoreProviderDecorator } from '../../../reducers/ReduxStoreProviderDecorator';
+import { ReduxStoreProviderDecorator } from '../../../../reducers/ReduxStoreProviderDecorator';
+import { AppRootStateType } from '../../../../reducers/store';
 
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export

@@ -1,4 +1,4 @@
-import { taskTodoType } from '../AppWidthRedux'
+import { taskTodoType } from '../Components/app/App'
 import { TaskPriorities, TaskStatus, TaskType } from '../api/todolists-api'
 import { addTaskAC, removeTaskAC, setTasksAC, tasksReducer, updateTaskAC } from './tasksReducer'
 import { TodolistsDomainType, addTodolistAC, removeTodolistAC } from './todolistsReducer'

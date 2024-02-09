@@ -1,15 +1,17 @@
 import React, { FC, memo } from "react";
-import { CheckBox } from "../../management/CheckBox";
-import { EditableSpan } from "../../management/EditableSpan";
+
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from "@mui/icons-material/Delete";
-import { removeTaskTC, updateTaskTC } from "../../../reducers/tasksReducer";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { AppRootStateType } from "../../../reducers/store";
-import { TaskStatus, TaskType } from "../../../api/todolists-api";
+
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
+import { AppRootStateType } from "../../../../reducers/store";
+import { TaskStatus, TaskType } from "../../../../api/todolists-api";
+import { removeTaskTC, updateTaskTC } from "../../../../reducers/tasksReducer";
+import { CheckBox } from "../../../management/CheckBox";
+import { EditableSpan } from "../../../management/EditableSpan";
 
 type TaskProps = {
    todolistID: string

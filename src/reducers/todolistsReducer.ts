@@ -1,12 +1,20 @@
 import { todolistsAPI, todolistsType } from "../api/todolists-api"
 import { Dispatch } from "redux";
 
+//types
 
 export type FilterValuesType = "all" | "active" | "completed";
 
 export type TodolistsDomainType = todolistsType & {
    filter: FilterValuesType
 }
+
+type todolistsReducerType = changeFilterACType
+   | removeTodolistACType
+   | addTodolistACType
+   | updateTodolistACType
+   | getTodolistACType
+
 
 const initialState: TodolistsDomainType[] = []
 
@@ -32,9 +40,10 @@ export const todolistsReducer = (state: TodolistsDomainType[] = initialState, ac
          return state
    }
 }
-type todolistsReducerType = changeFilterACType | removeTodolistACType | addTodolistACType | updateTodolistACType | getTodolistACType
-type changeFilterACType = ReturnType<typeof changeFilterAC>
 
+//action
+
+type changeFilterACType = ReturnType<typeof changeFilterAC>
 export const changeFilterAC = (todolistID: string, value: FilterValuesType) => {
    return {
       type: "CHANGE-FILTER",
@@ -86,27 +95,30 @@ export const getTodolistAC = (todolists: todolistsType[]) => {
    } as const
 }
 
+
+//thunk
+
 export const getTodolistTC = () => {
-   return (dispatch: Dispatch) => {
+   return (dispatch: Dispatch<todolistsReducerType>) => {
       todolistsAPI.readTodolists()
          .then((res) => { dispatch(getTodolistAC(res.data)) })
    }
 
 }
 export const removeTodolistTC = (todolistID: string) => {
-   return (dispatch: Dispatch) => {
+   return (dispatch: Dispatch<todolistsReducerType>) => {
       todolistsAPI.deleteTodolists(todolistID)
          .then(res => dispatch(removeTodolistAC(todolistID)))
    }
 }
 export const addTodolistTC = (title: string) => {
-   return (dispatch: Dispatch) => {
+   return (dispatch: Dispatch<todolistsReducerType>) => {
       todolistsAPI.createTodolists(title)
          .then(res => dispatch(addTodolistAC(res.data.data.item)))
    }
 }
 export const updateTodolistTC = (todolistID: string, title: string) => {
-   return (dispatch: Dispatch) => {
+   return (dispatch: Dispatch<todolistsReducerType>) => {
       todolistsAPI.updateTodolists(title, todolistID)
          .then(res => dispatch(updateTodolistAC(todolistID, title)))
    }
