@@ -2,10 +2,10 @@ import { addTodolistACType, getTodolistACType, removeTodolistACType } from './to
 import { taskTodoType } from '../Components/app/App';
 import { TaskType, modelType, todolistsAPI } from '../api/todolists-api';
 import { Dispatch } from 'redux';
-import { AppRootStateType } from './store';
+import { AppAllReducerType, AppRootStateType } from './store';
 
 //types
-type taskReducerType = removeTaskACType
+export type taskReducerType = removeTaskACType
    | addTaskACType
    | updateTaskACType
    | removeTodolistACType
@@ -125,21 +125,21 @@ export const setTasksAC = (todolistID: string, tasks: TaskType[]) => {
 //thunk
 
 export const setTaskTC = (todolistID: string) => {
-   return (dispatch: Dispatch<taskReducerType>) => {
+   return (dispatch: Dispatch<AppAllReducerType>) => {
       todolistsAPI.readTask(todolistID)
          .then(data => dispatch(setTasksAC(todolistID, data.data.items)))
    }
 }
 
 export const removeTaskTC = (todolistID: string, taskID: string) => {
-   return (dispatch: Dispatch<taskReducerType>) => {
+   return (dispatch: Dispatch<AppAllReducerType>) => {
       todolistsAPI.deleteTask(todolistID, taskID)
          .then(data => dispatch(removeTaskAC(todolistID, taskID)))
    }
 }
 
 export const addTaskTC = (todolistID: string, title: string) => {
-   return (dispatch: Dispatch<taskReducerType>) => {
+   return (dispatch: Dispatch<AppAllReducerType>) => {
       todolistsAPI.createTask(todolistID, title)
          .then(res => {
             dispatch(addTaskAC(res.data.data.item))

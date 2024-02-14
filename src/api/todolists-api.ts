@@ -60,7 +60,10 @@ export type modelType = {
 
 
 
-const settings = { withCredentials: true }
+const settings = {
+   withCredentials: true,
+   apikey:"fb565e66-163c-404a-8bfa-c7212c08dd95" 
+}
 
 const instance = axios.create({
    baseURL: "https://social-network.samuraijs.com/api/1.1",
@@ -92,7 +95,7 @@ export const todolistsAPI = {
    },
 
    //task
-   
+
    readTask(todolistID: string) {
       return instance.get<GetTaskResponseType>(`/todo-lists/${todolistID}/tasks`)
    },

@@ -24,7 +24,7 @@ export const Todolist = memo((props: PropsType) => {
     console.log("Todolist " + props.title);
 
     let tasks = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[props.todolistID])
-    const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch()
+    const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch()
 
     useEffect(() => {
         dispatch(setTaskTC(props.todolistID))
