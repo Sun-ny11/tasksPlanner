@@ -9,7 +9,7 @@ export type todolistsType = {
    order: number
 }
 
-type ResponseType<D = {}> = {
+export type ResponseType<D = {}> = {
    resultCode: number
    messages: string[],
    data: D
@@ -62,7 +62,7 @@ export type modelType = {
 
 const settings = {
    withCredentials: true,
-   apikey:"fb565e66-163c-404a-8bfa-c7212c08dd95" 
+   apikey: "fb565e66-163c-404a-8bfa-c7212c08dd95"
 }
 
 const instance = axios.create({

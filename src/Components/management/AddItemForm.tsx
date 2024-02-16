@@ -3,11 +3,11 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 export type AddItemFormProps = {
-   // title:string
+   disabled?: boolean
    collBack: (title: string) => void
 }
 
-export const AddItemForm: FC<AddItemFormProps> = memo((props) => {
+export const AddItemForm: FC<AddItemFormProps> = memo(({ disabled = false, collBack }) => {
    console.log("AddItemForm");
 
    let [title, setTitle] = useState("")
@@ -26,7 +26,7 @@ export const AddItemForm: FC<AddItemFormProps> = memo((props) => {
 
    const addTask = () => {
       if (title.trim() !== "") {
-         props.collBack(title.trim());
+         collBack(title.trim());
          setTitle("");
       } else {
          setError("Title is required");
@@ -46,13 +46,14 @@ export const AddItemForm: FC<AddItemFormProps> = memo((props) => {
             onKeyPress={onKeyPressHandler}
             size="small"
             error={!!error}
+            disabled={disabled}
          />
          {/* <input value={title}
             onChange={onChangeHandler}
             onKeyPress={onKeyPressHandler}
             className={error ? "error" : ""}
          /> */}
-         <Button onClick={addTask} size="small" variant="contained" style={styles}>+</Button>
+         <Button onClick={addTask} size="small" variant="contained" style={styles} disabled={disabled}>+</Button>
       </div>
    );
 })

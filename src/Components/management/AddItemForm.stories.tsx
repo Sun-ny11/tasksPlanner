@@ -32,6 +32,11 @@ type Story = StoryObj<typeof AddItemForm>;
 export const AddItemFormStory: Story = {
    render: () => <AddItemForm collBack={action("Callback")} />
 };
+export const AddItemFormDisabled: Story = {
+   render: () => <AddItemForm disabled={true} collBack={action("Callback")} />
+};
+
+
 const AddItemFormError = (props: AddItemFormProps) => {
 
    let [title, setTitle] = useState("")

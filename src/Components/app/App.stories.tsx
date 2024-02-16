@@ -25,5 +25,5 @@ type Story = StoryObj<typeof App>;
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 
 export const AppWidthReduxStory: Story = {
-    render: () => <App />
+    render: () => <App demo={true}/>
 }

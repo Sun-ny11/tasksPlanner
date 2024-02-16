@@ -10,14 +10,18 @@ import { AddItemForm } from "../../management/AddItemForm";
 import { Todolist } from '../todoList/Todolist';
 
 type TodolistsListType = {
-
+   demo?: boolean
 }
-export const TodolistsList: FC<TodolistsListType> = ({ }) => {
+
+export const TodolistsList: FC<TodolistsListType> = ({ demo = false }) => {
 
    let todolists = useSelector<AppRootStateType, TodolistsDomainType[]>(state => state.todolists)
    const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch()
 
    useEffect(() => {
+      if (demo) {
+         return
+      }
       dispatch(getTodolistTC())
 
    }, [])
@@ -37,9 +41,11 @@ export const TodolistsList: FC<TodolistsListType> = ({ }) => {
                return <Grid key={el.id} item justifyContent={"space-around"}>
                   <Paper elevation={3} style={{ padding: "20px" }}>
                      <Todolist
-                        todolistID={el.id}
-                        title={el.title}
-                        filter={el.filter}
+                        todolist={el}
+                        // todolistID={el.id}
+                        // title={el.title}
+                        // filter={el.filter}
+                        demo={demo}
                      />
                   </Paper>
                </Grid>

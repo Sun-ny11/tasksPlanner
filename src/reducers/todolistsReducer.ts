@@ -1,6 +1,9 @@
+import { error } from 'console';
 import { todolistsAPI, todolistsType } from "../api/todolists-api"
 import { Dispatch } from "redux";
 import { AppAllReducerType } from "./store";
+import { RequestType, setAppStatus } from "./appReducer";
+import { handelNetworkError, handelServerAppError } from "../utils/error-utils";
 
 //types
 
@@ -8,6 +11,7 @@ export type FilterValuesType = "all" | "active" | "completed";
 
 export type TodolistsDomainType = todolistsType & {
    filter: FilterValuesType
+   entityStatus: RequestType
 }
 
 export type todolistsReducerType = changeFilterACType
@@ -15,12 +19,14 @@ export type todolistsReducerType = changeFilterACType
    | addTodolistACType
    | updateTodolistACType
    | getTodolistACType
+   | changeTodolistEntityStatusACType
 
 type changeFilterACType = ReturnType<typeof changeFilterAC>
 export type removeTodolistACType = ReturnType<typeof removeTodolistAC>
 export type addTodolistACType = ReturnType<typeof addTodolistAC>
 type updateTodolistACType = ReturnType<typeof updateTodolistAC>
 export type getTodolistACType = ReturnType<typeof getTodolistAC>
+export type changeTodolistEntityStatusACType = ReturnType<typeof changeTodolistEntityStatusAC>
 
 
 const initialState: TodolistsDomainType[] = []
@@ -34,14 +40,16 @@ export const todolistsReducer = (state: TodolistsDomainType[] = initialState, ac
          return state.filter(el => el.id !== action.payload.todolistID)
       }
       case "ADD-TODOLIST": {
-         return [...state, { ...action.payload.todo, filter: 'all' }]
+         return [...state, { ...action.payload.todo, filter: 'all', entityStatus: "idle" }]
       }
       case "UPDATE-TODOLIST": {
          return state.map(el => el.id === action.payload.todolistID ? { ...el, title: action.payload.title } : el)
-
       }
       case "GET-TODOLIST": {
-         return action.payload.todolists.map(el => ({ ...el, filter: "all" }))
+         return action.payload.todolists.map(el => ({ ...el, filter: "all", entityStatus: "idle" }))
+      }
+      case "CHANGE-TODOLIST-ENTITY-STATUS": {
+         return state.map(el => el.id === action.payload.todolistID ? { ...el, entityStatus: action.payload.status } : el)
       }
       default:
          return state
@@ -49,8 +57,6 @@ export const todolistsReducer = (state: TodolistsDomainType[] = initialState, ac
 }
 
 //action
-
-
 
 export const changeFilterAC = (todolistID: string, value: FilterValuesType) => {
    return {
@@ -99,6 +105,16 @@ export const getTodolistAC = (todolists: todolistsType[]) => {
    } as const
 }
 
+export const changeTodolistEntityStatusAC = (status: RequestType, todolistID: string) => {
+   return {
+      type: "CHANGE-TODOLIST-ENTITY-STATUS",
+      payload: {
+         status,
+         todolistID
+      }
+   } as const
+}
+
 
 //thunk
 
@@ -114,26 +130,70 @@ export const getTodolistAC = (todolists: todolistsType[]) => {
 
 export const getTodolistTC = () => {
    return (dispatch: Dispatch<AppAllReducerType>) => {
+      dispatch(setAppStatus("loading"))
       todolistsAPI.readTodolists()
-         .then((res) => { dispatch(getTodolistAC(res.data)) })
+         .then((res) => {
+            if (res.statusText === "") {
+               dispatch(getTodolistAC(res.data))
+               dispatch(setAppStatus("succeeded"))
+            }
+         }
+         ).catch((error) => {
+            handelNetworkError(error, dispatch)
+         })
    }
 
 }
 export const removeTodolistTC = (todolistID: string) => {
    return (dispatch: Dispatch<AppAllReducerType>) => {
+      dispatch(setAppStatus("loading"))
+      dispatch(changeTodolistEntityStatusAC("loading", todolistID))
       todolistsAPI.deleteTodolists(todolistID)
-         .then(res => dispatch(removeTodolistAC(todolistID)))
+         .then(res => {
+            if (res.data.resultCode === 0) {
+               dispatch(removeTodolistAC(todolistID))
+               dispatch(setAppStatus("succeeded"))
+            } else {
+               handelServerAppError(res.data, dispatch)
+            }
+         }
+         ).catch((error) => {
+            handelNetworkError(error, dispatch)
+         })
    }
 }
 export const addTodolistTC = (title: string) => {
    return (dispatch: Dispatch<AppAllReducerType>) => {
+      dispatch(setAppStatus("loading"))
       todolistsAPI.createTodolists(title)
-         .then(res => dispatch(addTodolistAC(res.data.data.item)))
+         .then(res => {
+            if (res.data.resultCode === 0) {
+               dispatch(addTodolistAC(res.data.data.item))
+               dispatch(setAppStatus("succeeded"));
+            } else {
+               handelServerAppError(res.data, dispatch)
+            }
+         }
+         ).catch((error) => {
+            handelNetworkError(error, dispatch)
+         })
    }
 }
 export const updateTodolistTC = (todolistID: string, title: string) => {
    return (dispatch: Dispatch<AppAllReducerType>) => {
+      dispatch(setAppStatus("loading"))
       todolistsAPI.updateTodolists(title, todolistID)
-         .then(res => dispatch(updateTodolistAC(todolistID, title)))
+         .then(res => {
+            if (res.data.resultCode === 0) {
+               dispatch(updateTodolistAC(todolistID, title))
+               dispatch(setAppStatus("succeeded"));
+            } else {
+               handelServerAppError(res.data, dispatch)
+            }
+         }
+         ).catch((error) => {
+            handelNetworkError(error, dispatch)
+         })
    }
 }
+

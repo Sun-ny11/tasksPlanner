@@ -3,6 +3,8 @@ import { taskTodoType } from '../Components/app/App';
 import { TaskType, modelType, todolistsAPI } from '../api/todolists-api';
 import { Dispatch } from 'redux';
 import { AppAllReducerType, AppRootStateType } from './store';
+import { setAppStatus } from './appReducer';
+import { handelNetworkError, handelServerAppError } from '../utils/error-utils';
 
 //types
 export type taskReducerType = removeTaskACType
@@ -126,30 +128,60 @@ export const setTasksAC = (todolistID: string, tasks: TaskType[]) => {
 
 export const setTaskTC = (todolistID: string) => {
    return (dispatch: Dispatch<AppAllReducerType>) => {
+      dispatch(setAppStatus("loading"))
       todolistsAPI.readTask(todolistID)
-         .then(data => dispatch(setTasksAC(todolistID, data.data.items)))
+         .then(data => {
+            if (data.data.error === null) {
+               dispatch(setTasksAC(todolistID, data.data.items))
+               dispatch(setAppStatus("succeeded"))
+            }
+         }
+         ).catch((error) => {
+            handelNetworkError(error, dispatch)
+         })
    }
 }
 
 export const removeTaskTC = (todolistID: string, taskID: string) => {
    return (dispatch: Dispatch<AppAllReducerType>) => {
+      dispatch(setAppStatus("loading"))
       todolistsAPI.deleteTask(todolistID, taskID)
-         .then(data => dispatch(removeTaskAC(todolistID, taskID)))
+         .then(data => {
+            if (data.data.resultCode === 0) {
+               dispatch(removeTaskAC(todolistID, taskID))
+               dispatch(setAppStatus("succeeded"));
+            } else {
+               handelServerAppError(data.data, dispatch)
+            }
+         }
+         ).catch((error) => {
+            handelNetworkError(error, dispatch)
+         })
    }
 }
 
 export const addTaskTC = (todolistID: string, title: string) => {
    return (dispatch: Dispatch<AppAllReducerType>) => {
+      dispatch(setAppStatus("loading"))
       todolistsAPI.createTask(todolistID, title)
          .then(res => {
-            dispatch(addTaskAC(res.data.data.item))
+            if (res.data.resultCode === 0) {
+               dispatch(addTaskAC(res.data.data.item));
+               dispatch(setAppStatus("succeeded"));
+            } else {
+               handelServerAppError(res.data, dispatch)
+            }
+         }
+         ).catch((error) => {
+            handelNetworkError(error, dispatch)
          })
    }
 }
 
 export const updateTaskTC = (todolistID: string, modelDomain: updateDomainTaskModelType, taskId: string) => {
 
-   return (dispatch: Dispatch<taskReducerType>, getState: () => AppRootStateType) => {
+   return (dispatch: Dispatch<AppAllReducerType>, getState: () => AppRootStateType) => {
+      dispatch(setAppStatus("loading"))
 
       const state = getState()
       const task = state.tasks[todolistID].find(el => el.id === taskId)
@@ -169,7 +201,16 @@ export const updateTaskTC = (todolistID: string, modelDomain: updateDomainTaskMo
       }
 
       todolistsAPI.updateTask(todolistID, taskId, modelApi)
-         .then(res => dispatch(updateTaskAC(todolistID, modelDomain, taskId)))
-
+         .then(res => {
+            if (res.data.resultCode === 0) {
+               dispatch(updateTaskAC(todolistID, modelDomain, taskId))
+               dispatch(setAppStatus("succeeded"));
+            } else {
+               handelServerAppError(res.data, dispatch)
+            }
+         }).catch((error) => {
+            handelNetworkError(error, dispatch)
+         })
    }
+
 }
