@@ -1,7 +1,12 @@
 import axios from "axios"
+import { FormikErrorType } from "../Components/features/login/Login"
 
 //types
-
+type LoginType = {
+   id: number
+   email: string
+   login: string
+}
 export type todolistsType = {
    id: string
    title: string
@@ -109,3 +114,16 @@ export const todolistsAPI = {
       return instance.put<ResponseType<{ item: TaskType }>>(`/todo-lists/${todolistID}/tasks/${taskID}`, model)
    }
 }
+
+export class AuthAPI {
+   public login(data: FormikErrorType) {
+      return instance.post<ResponseType<{ userId: number }>>("auth/login",data)
+   }
+   public logOut() {
+      return instance.delete<ResponseType>("auth/login")
+   }
+   public me() {
+      return instance.get<ResponseType<LoginType>>("auth/me")
+   }
+}
+export const authAPI = new AuthAPI()

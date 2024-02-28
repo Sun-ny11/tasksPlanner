@@ -12,6 +12,7 @@ import { addTaskTC, setTaskTC } from '../../../reducers/tasksReducer';
 import { EditableSpan } from '../../management/EditableSpan';
 import { AddItemForm } from '../../management/AddItemForm';
 import { ButtonWithRedux } from '../../management/ButtonWithRedux';
+import { Navigate } from 'react-router-dom';
 
 
 type PropsType = {
@@ -26,6 +27,7 @@ export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
     console.log("Todolist " + props.todolist.title);
 
     let tasks = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[props.todolist.id])
+
     const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch()
 
     useEffect(() => {
@@ -66,6 +68,7 @@ export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
     const updateTodolistHandler = useCallback((title: string) => {
         dispatch(updateTodolistTC(props.todolist.id, title))
     }, [dispatch, props.todolist.id])
+
 
     return <div>
         <h3>

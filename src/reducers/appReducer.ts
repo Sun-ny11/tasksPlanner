@@ -12,8 +12,8 @@ export type InitialStateType = {
    error: string | null
 }
 export type ActionAppType = setAppStatusType | setAppErrorType
-type setAppStatusType = ReturnType<typeof setAppStatus>
-type setAppErrorType = ReturnType<typeof setAppError>
+export type setAppStatusType = ReturnType<typeof setAppStatus>
+export type setAppErrorType = ReturnType<typeof setAppError>
 
 const initialState: InitialStateType = {
    status: "idle",
