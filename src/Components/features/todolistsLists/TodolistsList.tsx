@@ -22,6 +22,8 @@ export const TodolistsList: FC<TodolistsListType> = ({ demo = false }) => {
    const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch()
 
    useEffect(() => {
+      console.log(2);
+      
       if (demo || !isLoggedIn) {
          return
       }

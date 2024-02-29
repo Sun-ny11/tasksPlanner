@@ -7,15 +7,18 @@ export type InitialStateType = {
    // loading ждем ответа 
    // succeeded ответ
    // failed ошибка 
+   isInitialized: boolean
    status: RequestType
    //запишется текст ошибки 
    error: string | null
 }
-export type ActionAppType = setAppStatusType | setAppErrorType
+export type ActionAppType = setAppStatusType | setAppErrorType | setIsInitializedType
 export type setAppStatusType = ReturnType<typeof setAppStatus>
 export type setAppErrorType = ReturnType<typeof setAppError>
+export type setIsInitializedType = ReturnType<typeof setIsInitialized>
 
 const initialState: InitialStateType = {
+   isInitialized: false,
    status: "idle",
    error: null
 }
@@ -26,6 +29,9 @@ export const appReducer = (state: InitialStateType = initialState, action: Actio
       }
       case "SET-ERROR": {
          return { ...state, error: action.payload.error };
+      }
+      case "SET-IS-INITIALIZED":{
+         return { ...state, isInitialized: action.payload.status };
       }
       default:
          return state;;
@@ -45,6 +51,14 @@ export const setAppError = (error: string | null) => {
       type: "SET-ERROR",
       payload: {
          error
+      }
+   } as const
+}
+export const setIsInitialized = (status: boolean) => {
+   return {
+      type: "SET-IS-INITIALIZED",
+      payload: {
+         status
       }
    } as const
 }

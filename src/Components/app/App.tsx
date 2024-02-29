@@ -15,6 +15,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { initializeAppTC } from '../../reducers/authReducer';
+import { CircularProgress } from '@mui/material';
 
 export type taskTodoType = {
     [key: string]: TaskType[]
@@ -27,11 +28,21 @@ type PropsType = {
 function App({ demo = false }: PropsType) {
 
     const status = useSelector<AppRootStateType, RequestType>(state => state.app.status)
+    const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
     const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch()
-    
-    useEffect(()=>{
+
+    useEffect(() => {
+        console.log(1);
+
         dispatch(initializeAppTC())
-    })
+    }, [])
+
+    if (!isInitialized) {
+        return <div
+            style={{ position: 'fixed', top: '30%', textAlign: 'center', width: '100%' }}>
+            <CircularProgress />
+        </div>
+    }
 
     return (
         <div className="App">
@@ -40,10 +51,10 @@ function App({ demo = false }: PropsType) {
             {status === "loading" && <LinearProgress />}
             <Container >
                 <Routes>
-                    <Route path={'/'} element={<TodolistsList demo={demo} />} />
+                    <Route path={'/second-todolist'} element={<TodolistsList demo={demo} />} />
                     <Route path={'/login'} element={<Login />} />
                     <Route path={'/error404'} element={<h1>404 page not found</h1>} />
-                    <Route path={'/*'} element={<Navigate to={'/error404'}/> } />
+                    <Route path={'/*'} element={<Navigate to={'/error404'} />} />
                 </Routes>
 
 

@@ -31,6 +31,8 @@ export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
     const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch()
 
     useEffect(() => {
+        console.log(3);
+        
         if (demo) {
             return
         }
