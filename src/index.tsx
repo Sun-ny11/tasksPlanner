@@ -1,21 +1,20 @@
-import React from 'react';
-import './index.css';
-import * as serviceWorker from './serviceWorker';
-import { createRoot } from 'react-dom/client';
-import App from './Components/app/App';
-import { Provider } from 'react-redux';
-import { store } from './reducers/store';
-import { BrowserRouter } from 'react-router-dom';
+import React from "react";
+import "./index.css";
+import * as serviceWorker from "./serviceWorker";
+import { createRoot } from "react-dom/client";
+import App from "./Components/app/App";
+import { Provider } from "react-redux";
+import { store } from "./reducers/store";
+import { BrowserRouter } from "react-router-dom";
 
-const container = document.getElementById('root') as HTMLElement
+const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
 root.render(
    <BrowserRouter>
       <Provider store={store}>
          <App />
       </Provider>
-   </BrowserRouter>
-
+   </BrowserRouter>,
 );
 
 // If you want your app to work offline and load faster, you can change

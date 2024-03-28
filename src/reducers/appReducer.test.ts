@@ -1,24 +1,24 @@
-import { InitialStateType, appReducer, setAppError, setAppStatus } from "./appReducer";
+// import { appReducer,} from "./appReducer";
 
-let startState: InitialStateType
+import { appActions, appReducer } from "./appReducer";
+
+let startState: any;
 
 beforeEach(() => {
    startState = {
       isInitialized: false,
       status: "idle",
-      error: null
-   }
-})
+      error: null,
+   };
+});
 
 test("correct error message should be set", () => {
-   let endState = appReducer(startState, setAppError("error"))
+   let endState = appReducer(startState, appActions.setAppError({ error: "error" }));
 
-   expect(endState.error).toBe("error")
-   
-})
+   expect(endState.error).toBe("error");
+});
 test("correct status should be set", () => {
-   let endState = appReducer(startState, setAppStatus("succeeded"))
+   let endState = appReducer(startState, appActions.setAppStatus({ status: "succeeded" }));
 
-   expect(endState.status).toBe("succeeded")
-
-})
+   expect(endState.status).toBe("succeeded");
+});

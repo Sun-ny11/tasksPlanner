@@ -12,13 +12,13 @@ import { thunk } from "redux-thunk";
 const rootReducer = combineReducers({
    tasks: tasksReducer,
    todolists: todolistsReducer,
-   app: appReducer
-})
+   app: appReducer,
+});
 
 const initialGlobalState = {
    todolists: [
       { id: "todolistId1", title: "What to learn", addedDate: "", order: 0, filter: "all", entityStatus: "idle" },
-      { id: "todolistId2", title: "What to buy", addedDate: "", order: 0, filter: "all", entityStatus: "loading" }
+      { id: "todolistId2", title: "What to buy", addedDate: "", order: 0, filter: "all", entityStatus: "loading" },
    ],
    tasks: {
       ["todolistId1"]: [
@@ -32,7 +32,7 @@ const initialGlobalState = {
             priority: TaskPriorities.Low,
             startDate: "",
             deadline: "",
-            addedDate: ""
+            addedDate: "",
          },
          {
             id: v1(),
@@ -44,7 +44,7 @@ const initialGlobalState = {
             priority: TaskPriorities.Low,
             startDate: "",
             deadline: "",
-            addedDate: ""
+            addedDate: "",
          },
       ],
       ["todolistId2"]: [
@@ -58,7 +58,7 @@ const initialGlobalState = {
             priority: TaskPriorities.Low,
             startDate: "",
             deadline: "",
-            addedDate: ""
+            addedDate: "",
          },
          {
             id: v1(),
@@ -70,18 +70,22 @@ const initialGlobalState = {
             priority: TaskPriorities.Low,
             startDate: "",
             deadline: "",
-            addedDate: ""
+            addedDate: "",
          },
-      ]
+      ],
    },
    app: {
       status: "idle",
-      error: null
-   }
+      error: null,
+   },
 };
 
-export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as AppRootStateType & undefined, applyMiddleware(thunk));
+export const storyBookStore = legacy_createStore(
+   rootReducer,
+   initialGlobalState as AppRootStateType & undefined,
+   applyMiddleware(thunk),
+);
 
 export const ReduxStoreProviderDecorator = (storyFn: () => React.ReactNode) => {
-   return <Provider store={storyBookStore}>{storyFn()}</Provider>
+   return <Provider store={storyBookStore}>{storyFn()}</Provider>;
 };

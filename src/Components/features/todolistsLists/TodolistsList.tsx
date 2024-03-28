@@ -1,44 +1,44 @@
-import React, { FC, useCallback, useEffect } from 'react';
+import React, { FC, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppRootStateType } from "../../../reducers/store";
 import { TodolistsDomainType, addTodolistTC, getTodolistTC } from "../../../reducers/todolistsReducer";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import { AddItemForm } from "../../management/AddItemForm";
-import { Todolist } from '../todoList/Todolist';
-import { Navigate } from 'react-router-dom';
+import { Todolist } from "../todoList/Todolist";
+import { Navigate } from "react-router-dom";
 
 type TodolistsListType = {
-   demo?: boolean
-}
+   demo?: boolean;
+};
 
 export const TodolistsList: FC<TodolistsListType> = ({ demo = false }) => {
+   let todolists = useSelector<AppRootStateType, TodolistsDomainType[]>((state) => state.todolists);
+   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);
 
-   let todolists = useSelector<AppRootStateType, TodolistsDomainType[]>(state => state.todolists)
-   const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
-
-   const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch()
+   const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch();
 
    useEffect(() => {
       console.log(2);
-      
+
       if (demo || !isLoggedIn) {
-         return
+         return;
       }
-      dispatch(getTodolistTC())
+      dispatch(getTodolistTC());
+   }, []);
 
-   }, [])
-
-   const addTodolist = useCallback((title: string) => {
-      dispatch(addTodolistTC(title))
-   }, [dispatch])
+   const addTodolist = useCallback(
+      (title: string) => {
+         dispatch(addTodolistTC(title));
+      },
+      [dispatch],
+   );
 
    if (isLoggedIn === false) {
-      return <Navigate to={'/login'} />
+      return <Navigate to={"/login"} />;
    }
-
 
    return (
       <>
@@ -47,18 +47,20 @@ export const TodolistsList: FC<TodolistsListType> = ({ demo = false }) => {
          </Grid>
 
          <Grid container spacing={3} justifyContent={"center"}>
-            {todolists.map(el => {
-               return <Grid key={el.id} item justifyContent={"space-around"}>
-                  <Paper elevation={3} style={{ padding: "20px" }}>
-                     <Todolist
-                        todolist={el}
-                        // todolistID={el.id}
-                        // title={el.title}
-                        // filter={el.filter}
-                        demo={demo}
-                     />
-                  </Paper>
-               </Grid>
+            {todolists.map((el) => {
+               return (
+                  <Grid key={el.id} item justifyContent={"space-around"}>
+                     <Paper elevation={3} style={{ padding: "20px" }}>
+                        <Todolist
+                           todolist={el}
+                           // todolistID={el.id}
+                           // title={el.title}
+                           // filter={el.filter}
+                           demo={demo}
+                        />
+                     </Paper>
+                  </Grid>
+               );
             })}
          </Grid>
       </>

@@ -1,77 +1,68 @@
-import { Dispatch } from 'redux'
-import { setAppStatus, setAppStatusType, setIsInitialized } from './appReducer'
-import { AppAllReducerType } from './store'
-import { authAPI } from '../api/todolists-api'
-import { FormikErrorType } from '../Components/features/login/Login'
-import { handelNetworkError, handelServerAppError } from '../utils/error-utils'
+import { Dispatch } from "redux";
+import { authAPI } from "../api/todolists-api";
+import { FormikErrorType } from "../Components/features/login/Login";
+import { handelNetworkError, handelServerAppError } from "../utils/error-utils";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { appActions } from "./appReducer";
 
+const slice = createSlice({
+   name: "auth",
+   initialState: {
+      isLoggedIn: false,
+   },
+   reducers: {
+      setIsLoggedIn: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
+         state.isLoggedIn = action.payload.isLoggedIn;
+      },
+   },
+});
 
-export type authReducerType = ReturnType<typeof setIsLoggedInAC> | setAppStatusType
-
-const initialState = {
-   isLoggedIn: false
-}
-type InitialStateType = typeof initialState
-
-export const authReducer = (state: InitialStateType = initialState, action: authReducerType): InitialStateType => {
-   switch (action.type) {
-      case 'login/SET-IS-LOGGED-IN':
-         return { ...state, isLoggedIn: action.value }
-      default:
-         return state
-   }
-}
-// actions
-export const setIsLoggedInAC = (value: boolean) =>
-   ({ type: 'login/SET-IS-LOGGED-IN', value } as const)
+export const authReducer = slice.reducer;
+export const authActions = slice.actions;
 
 // thunks
-export const loginTC = (data: FormikErrorType) => async (dispatch: Dispatch<AppAllReducerType>) => {
-   dispatch(setAppStatus('loading'))
+export const loginTC = (data: FormikErrorType) => async (dispatch: Dispatch) => {
+   dispatch(appActions.setAppStatus({ status: "loading" }));
    try {
-      const res = await authAPI.login(data)
+      const res = await authAPI.login(data);
       if (res.data.resultCode === 0) {
-         dispatch(setIsLoggedInAC(true))
-         dispatch(setAppStatus('succeeded'))
+         dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
+         dispatch(appActions.setAppStatus({ status: "succeeded" }));
       } else {
-         handelServerAppError(res.data, dispatch)
+         handelServerAppError(res.data, dispatch);
       }
    } catch (e) {
-      handelNetworkError((e as { message: string }), dispatch)
-
+      handelNetworkError(e as { message: string }, dispatch);
    }
-}
-export const logOutTC = () => async (dispatch: Dispatch<AppAllReducerType>) => {
-   dispatch(setAppStatus('loading'))
+};
+export const logOutTC = () => async (dispatch: Dispatch) => {
+   dispatch(appActions.setAppStatus({ status: "loading" }));
    try {
-      const res = await authAPI.logOut()
+      const res = await authAPI.logOut();
       if (res.data.resultCode === 0) {
-         dispatch(setIsLoggedInAC(false))
-         dispatch(setAppStatus('succeeded'))
+         dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
+         dispatch(appActions.setAppStatus({ status: "succeeded" }));
       } else {
-         handelServerAppError(res.data, dispatch)
+         handelServerAppError(res.data, dispatch);
       }
    } catch (e) {
-      handelNetworkError((e as { message: string }), dispatch)
-
+      handelNetworkError(e as { message: string }, dispatch);
    }
-}
+};
 
-export const initializeAppTC = () => async (dispatch: Dispatch<AppAllReducerType>) => {
-   dispatch(setAppStatus('loading'))
+export const initializeAppTC = () => async (dispatch: Dispatch) => {
+   dispatch(appActions.setAppStatus({ status: "loading" }));
    try {
-      let res = await authAPI.me()
-      dispatch(setAppStatus('succeeded'))
-      dispatch(setAppStatus('succeeded'))
+      let res = await authAPI.me();
+      dispatch(appActions.setAppStatus({ status: "succeeded" }));
+      dispatch(appActions.setAppStatus({ status: "succeeded" }));
 
       if (res.data.resultCode === 0) {
-         dispatch(setIsLoggedInAC(true));
+         dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
       } else {
       }
    } catch (e) {
-
    } finally {
-      dispatch(setIsInitialized(true))
+      dispatch(appActions.setIsInitialized({ status: true }));
    }
-
-}
+};
