@@ -1,5 +1,5 @@
 import { tasksReducer } from "./tasksReducer";
-import { TodolistsDomainType, addTodolistAC, getTodolistAC, todolistsReducer } from "./todolistsReducer";
+import { TodolistsDomainType, todolistActions, todolistsReducer } from "./todolistsReducer";
 import { taskTodoType } from "../Components/app/App";
 
 test("ids should be equals", () => {
@@ -15,7 +15,7 @@ test("ids should be equals", () => {
       entityStatus: "idle",
    };
 
-   const action = addTodolistAC(newTodo);
+   const action = todolistActions.addTodolist({ todo: newTodo });
 
    const endTasksState = tasksReducer(startTasksState, action);
    const endTodolistsState = todolistsReducer(startTodolistsState, action);
@@ -29,10 +29,12 @@ test("ids should be equals", () => {
 });
 
 test("empty arrays should be added when we set todolist", () => {
-   const action = getTodolistAC([
-      { id: "1", title: "What to learn", addedDate: "", order: 0 },
-      { id: "2", title: "What to buy", addedDate: "", order: 0 },
-   ]);
+   const action = todolistActions.getTodolist({
+      todolists: [
+         { id: "1", title: "What to learn", addedDate: "", order: 0 },
+         { id: "2", title: "What to buy", addedDate: "", order: 0 },
+      ],
+   });
 
    const endState = tasksReducer({}, action);
 

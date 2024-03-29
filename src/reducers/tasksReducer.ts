@@ -1,20 +1,12 @@
-import { addTodolistACType, getTodolistACType, removeTodolistACType } from "./todolistsReducer";
 import { taskTodoType } from "../Components/app/App";
 import { TaskType, modelType, todolistsAPI } from "../api/todolists-api";
 import { Dispatch } from "redux";
-import { AppAllReducerType, AppRootStateType } from "./store";
+import { AppRootStateType } from "./store";
 import { handelNetworkError, handelServerAppError } from "../utils/error-utils";
 import { appActions } from "./appReducer";
 
 //types
-export type taskReducerType =
-   | removeTaskACType
-   | addTaskACType
-   | updateTaskACType
-   | removeTodolistACType
-   | addTodolistACType
-   | getTodolistACType
-   | setTasksACType;
+export type taskReducerType = removeTaskACType | addTaskACType | updateTaskACType | setTasksACType;
 
 export type updateDomainTaskModelType = {
    title?: string;
@@ -27,7 +19,7 @@ export type updateDomainTaskModelType = {
 
 const initialState: taskTodoType = {};
 
-export const tasksReducer = (state: taskTodoType = initialState, action: taskReducerType): taskTodoType => {
+export const tasksReducer = (state: taskTodoType = initialState, action: any): taskTodoType => {
    switch (action.type) {
       case "REMOVE-TASK": {
          return {
@@ -62,7 +54,7 @@ export const tasksReducer = (state: taskTodoType = initialState, action: taskRed
       }
       case "GET-TODOLIST": {
          const copyState = { ...state };
-         action.payload.todolists.forEach((el) => {
+         action.payload.todolists.forEach((el: any) => {
             copyState[el.id] = [];
          });
          return copyState;

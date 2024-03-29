@@ -7,8 +7,8 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import {
    TodolistsDomainType,
-   changeFilterAC,
    removeTodolistTC,
+   todolistActions,
    updateTodolistTC,
 } from "../../../reducers/todolistsReducer";
 import { AppRootStateType } from "../../../reducers/store";
@@ -55,15 +55,15 @@ export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
    }, [props.todolist.filter, tasks]);
 
    const onAllClickHandler = useCallback(
-      () => dispatch(changeFilterAC(props.todolist.id, "all")),
+      () => dispatch(todolistActions.changeFilter({ todolistID: props.todolist.id, value: "all" })),
       [dispatch, props.todolist.id],
    );
    const onActiveClickHandler = useCallback(
-      () => dispatch(changeFilterAC(props.todolist.id, "active")),
+      () => dispatch(todolistActions.changeFilter({ todolistID: props.todolist.id, value: "active" })),
       [dispatch, props.todolist.id],
    );
    const onCompletedClickHandler = useCallback(
-      () => dispatch(changeFilterAC(props.todolist.id, "completed")),
+      () => dispatch(todolistActions.changeFilter({ todolistID: props.todolist.id, value: "completed" })),
       [dispatch, props.todolist.id],
    );
 
@@ -100,11 +100,7 @@ export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
             </IconButton>
          </h3>
          <AddItemForm collBack={addTaskHandler} disabled={props.todolist.entityStatus === "loading"} />
-         <ul>
-            {tasksForTodolist.map((t) => (
-               <Task key={t.id} todolistID={props.todolist.id} taskID={t.id} />
-            ))}
-         </ul>
+         <ul>{tasksForTodolist?.map((t) => <Task key={t.id} todolistID={props.todolist.id} taskID={t.id} />)}</ul>
          <div>
             <ButtonWithRedux
                onClick={onAllClickHandler}

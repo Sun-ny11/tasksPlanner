@@ -1,7 +1,7 @@
 import { taskTodoType } from "../Components/app/App";
 import { TaskPriorities, TaskStatus, TaskType } from "../api/todolists-api";
 import { addTaskAC, removeTaskAC, setTasksAC, tasksReducer, updateTaskAC } from "./tasksReducer";
-import { TodolistsDomainType, addTodolistAC, removeTodolistAC } from "./todolistsReducer";
+import { TodolistsDomainType, todolistActions } from "./todolistsReducer";
 
 let startState: taskTodoType;
 
@@ -211,7 +211,7 @@ test("new array should be added when new todolist is added", () => {
       entityStatus: "idle",
    };
 
-   const action = addTodolistAC(newTodo);
+   const action = todolistActions.addTodolist({ todo: newTodo });
 
    const endState = tasksReducer(startState, action);
 
@@ -226,7 +226,7 @@ test("new array should be added when new todolist is added", () => {
 });
 
 test("property with todolistId should be deleted", () => {
-   const action = removeTodolistAC("todolistId2");
+   const action = todolistActions.removeTodolist({ todolistID: "todolistId2" });
 
    const endState = tasksReducer(startState, action);
 

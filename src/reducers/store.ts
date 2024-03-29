@@ -1,6 +1,6 @@
 import { UnknownAction, applyMiddleware, combineReducers, legacy_createStore } from "redux";
 import { taskReducerType, tasksReducer } from "./tasksReducer";
-import { todolistsReducer, todolistsReducerType } from "./todolistsReducer";
+import { todolistsReducer } from "./todolistsReducer";
 import { ThunkAction, thunk } from "redux-thunk";
 import { appReducer } from "./appReducer";
 import { authReducer } from "./authReducer";
@@ -27,7 +27,7 @@ export type AppRootStateType = ReturnType<typeof rootReducer>;
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, UnknownAction>;
 
 //Общий тип всех reducer
-export type AppAllReducerType = taskReducerType | todolistsReducerType;
+export type AppAllReducerType = any;
 // а это, чтобы можно было в консоли браузера обращаться к store в любой момент
 // @ts-ignore
 window.store = store;
