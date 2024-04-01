@@ -1,5 +1,5 @@
 import { ResponseType } from "./../api/todolists-api";
-import { Dispatch } from "redux";
+import { Dispatch } from "@reduxjs/toolkit";
 import { AppAllReducerType } from "../reducers/store";
 import { appActions } from "reducers/appReducer";
 

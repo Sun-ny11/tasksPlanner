@@ -1,9 +1,10 @@
-import { Dispatch } from "redux";
+import { Dispatch } from "@reduxjs/toolkit";
 import { authAPI } from "../api/todolists-api";
 import { FormikErrorType } from "../Components/features/login/Login";
 import { handelNetworkError, handelServerAppError } from "../utils/error-utils";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { appActions } from "./appReducer";
+import { todolistActions } from "./todolistsReducer";
 
 const slice = createSlice({
    name: "auth",
@@ -41,6 +42,7 @@ export const logOutTC = () => async (dispatch: Dispatch) => {
       const res = await authAPI.logOut();
       if (res.data.resultCode === 0) {
          dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
+         dispatch(todolistActions.clearData());
          dispatch(appActions.setAppStatus({ status: "succeeded" }));
       } else {
          handelServerAppError(res.data, dispatch);

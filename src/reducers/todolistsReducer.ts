@@ -1,10 +1,10 @@
 import { error } from "console";
 import { todolistsAPI, todolistsType } from "../api/todolists-api";
-import { Dispatch } from "redux";
+
 import { AppAllReducerType } from "./store";
 import { RequestType, appActions } from "./appReducer";
 import { handelNetworkError, handelServerAppError } from "../utils/error-utils";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { Dispatch, PayloadAction, createSlice, current } from "@reduxjs/toolkit";
 
 const slice = createSlice({
    name: "todolists",
@@ -35,6 +35,9 @@ const slice = createSlice({
       changeTodolistEntityStatus: (state, action: PayloadAction<{ status: RequestType; todolistID: string }>) => {
          const index = state.findIndex((todo) => todo.id === action.payload.todolistID);
          if (index !== -1) state[index].entityStatus = action.payload.status;
+      },
+      clearData: () => {
+         return [];
       },
    },
 });
