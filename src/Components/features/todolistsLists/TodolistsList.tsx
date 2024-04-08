@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppRootStateType } from "../../../reducers/store";
-import { TodolistsDomainType, addTodolistTC, getTodolistTC } from "../../../reducers/todolistsReducer";
+import { TodolistsDomainType, addTodolistTC, todolistThunks } from "../../../reducers/todolistsReducer";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import Grid from "@mui/material/Grid";
@@ -26,7 +26,7 @@ export const TodolistsList: FC<TodolistsListType> = ({ demo = false }) => {
       if (demo || !isLoggedIn) {
          return;
       }
-      dispatch(getTodolistTC());
+      dispatch(todolistThunks.getTodolist());
    }, []);
 
    const addTodolist = useCallback(

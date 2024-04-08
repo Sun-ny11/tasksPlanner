@@ -1,7 +1,6 @@
 // import { UnknownAction, applyMiddleware, combineReducers, legacy_createStore } from "redux";
 import { tasksReducer } from "./tasksReducer";
 import { todolistsReducer } from "./todolistsReducer";
-import { ThunkAction, thunk } from "redux-thunk";
 import { appReducer } from "./appReducer";
 import { authReducer } from "./authReducer";
 import { configureStore } from "@reduxjs/toolkit";

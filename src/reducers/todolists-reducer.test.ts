@@ -1,6 +1,13 @@
 import { RequestType } from "./appReducer";
-import { FilterValuesType, TodolistsDomainType, todolistActions, todolistsReducer } from "./todolistsReducer";
+import {
+   FilterValuesType,
+   TodolistsDomainType,
+   todolistActions,
+   todolistThunks,
+   todolistsReducer,
+} from "./todolistsReducer";
 import { v1 } from "uuid";
+import { ActionTypeForeTest } from "utils/types/types";
 
 let todolistId1: string;
 let todolistId2: string;
@@ -18,7 +25,12 @@ beforeEach(() => {
 });
 
 test("correct todolist should be removed", () => {
-   const endState = todolistsReducer(startState, todolistActions.removeTodolist({ todolistID: todolistId1 }));
+   const action: ActionTypeForeTest<typeof todolistThunks.removeTodolist.fulfilled> = {
+      type: todolistThunks.removeTodolist.fulfilled.type,
+      payload: { todolistID: todolistId1 },
+   };
+
+   const endState = todolistsReducer(startState, action);
 
    expect(endState.length).toBe(1);
    expect(endState[0].id).toBe(todolistId2);
@@ -79,7 +91,10 @@ test("correct filter of todolist should be changed", () => {
 });
 
 test("todolists should be set to the state", () => {
-   const action = todolistActions.getTodolist({ todolists: startState });
+   const action: ActionTypeForeTest<typeof todolistThunks.getTodolist.fulfilled> = {
+      type: todolistThunks.getTodolist.fulfilled.type,
+      payload: { todolists: startState },
+   };
 
    const endState = todolistsReducer([], action);
 

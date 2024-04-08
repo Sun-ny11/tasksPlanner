@@ -35,7 +35,7 @@
       "predeploy": "yarn run build",
       "deploy": "gh-pages -d build",
       "start": "react-scripts start",
-      "build": "react-scripts build",
+      "build": "GENERATE_SOURCEMAP=false react-scripts build",
       "test": "react-scripts test",
       "storybook": "storybook dev -p 9009",
       "build-storybook": "storybook build",

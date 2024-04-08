@@ -12,9 +12,9 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { useDispatch } from "react-redux";
 import { AppRootStateType } from "../../../reducers/store";
-import { loginTC } from "../../../reducers/authReducer";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { loginTC } from "reducers/authReducer";
 
 export type FormikErrorType = {
    email?: string;

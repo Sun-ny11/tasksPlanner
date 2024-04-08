@@ -27,7 +27,7 @@ type Story = StoryObj<typeof Task>;
 const TaskStory = () => {
    const taskID = useSelector<AppRootStateType, any>((state) => state.tasks["todolistId1"][0].id);
 
-   return <Task todolistID={"todolistId1"} taskID={taskID} />;
+   return <Task todolistID={"todolistId1"} taskId={taskID} />;
 };
 
 export const TaskToggle: Story = {

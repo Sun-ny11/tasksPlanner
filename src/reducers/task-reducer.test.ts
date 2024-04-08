@@ -1,7 +1,9 @@
+import { ActionTypeForeTest } from "utils/types/types";
 import { taskTodoType } from "../Components/app/App";
-import { TaskPriorities, TaskStatus, TaskType } from "../api/todolists-api";
-import { tasksActions, tasksReducer } from "./tasksReducer";
-import { TodolistsDomainType, todolistActions } from "./todolistsReducer";
+import { TaskType } from "../api/todolists-api";
+import { tasksActions, tasksReducer, tasksThunks } from "./tasksReducer";
+import { TodolistsDomainType, todolistActions, todolistThunks } from "./todolistsReducer";
+import { TaskPriorities, TaskStatus } from "common/enums/enums";
 
 let startState: taskTodoType;
 
@@ -87,7 +89,10 @@ beforeEach(() => {
 });
 
 test("correct task should be deleted from correct array", () => {
-   const action = tasksActions.removeTask({ todolistID: "todolistId2", taskId: "2" });
+   const action: ActionTypeForeTest<typeof tasksThunks.removeTask.fulfilled> = {
+      type: tasksThunks.removeTask.fulfilled.type,
+      payload: { todolistID: "todolistId2", taskId: "2" },
+   };
 
    const endState = tasksReducer(startState, action);
 
@@ -172,7 +177,10 @@ test("correct task should be added to correct array", () => {
       deadline: "",
       addedDate: "",
    };
-   const action = tasksActions.addTask({ newTask });
+   const action: ActionTypeForeTest<typeof tasksThunks.addTask.fulfilled> = {
+      type: tasksThunks.addTask.fulfilled.type,
+      payload: { newTask },
+   };
 
    const endState = tasksReducer(startState, action);
 
@@ -184,11 +192,19 @@ test("correct task should be added to correct array", () => {
 });
 
 test("status of specified task should be changed", () => {
-   const action = tasksActions.updateTask({
-      todolistID: "todolistId2",
-      model: { status: TaskStatus.New },
-      taskId: "2",
-   });
+   const action: ActionTypeForeTest<typeof tasksThunks.updateTask.fulfilled> = {
+      type: tasksThunks.updateTask.fulfilled.type,
+      payload: {
+         todolistID: "todolistId2",
+         model: { status: TaskStatus.New },
+         taskId: "2",
+      },
+   };
+
+   // ActionTypeForeTest<typeof tasksThunks.fetchTask.fulfilled> = {
+   //    type: tasksThunks.fetchTask.fulfilled.type,
+   //    payload: { todolistID: "todolistId2", tasks: startState["todolistId2"] },
+   // };
 
    const endState = tasksReducer(startState, action);
 
@@ -197,7 +213,10 @@ test("status of specified task should be changed", () => {
 });
 
 test("title of specified task should be changed", () => {
-   const action = tasksActions.updateTask({ todolistID: "todolistId2", model: { title: "add" }, taskId: "1" });
+   const action: ActionTypeForeTest<typeof tasksThunks.updateTask.fulfilled> = {
+      type: tasksThunks.updateTask.fulfilled.type,
+      payload: { todolistID: "todolistId2", model: { title: "add" }, taskId: "1" },
+   };
 
    const endState = tasksReducer(startState, action);
 
@@ -230,7 +249,10 @@ test("new array should be added when new todolist is added", () => {
 });
 
 test("property with todolistId should be deleted", () => {
-   const action = todolistActions.removeTodolist({ todolistID: "todolistId2" });
+   const action: ActionTypeForeTest<typeof todolistThunks.removeTodolist.fulfilled> = {
+      type: todolistThunks.removeTodolist.fulfilled.type,
+      payload: { todolistID: "todolistId2" },
+   };
 
    const endState = tasksReducer(startState, action);
 
@@ -241,7 +263,38 @@ test("property with todolistId should be deleted", () => {
 });
 
 test("tasks should be added for todolist", () => {
-   const action = tasksActions.setTasks({ todolistID: "todolistId2", tasks: startState["todolistId2"] });
+   // 1 параметр (payload) - то, что thunk возвращает
+   // Второй и третий параметр нужен только для TS
+   // 2 параметр (meta данные) - нужны только для тестов, чтобы они отрабатывали,
+   //хотя эти данные мы не используем. В meta данные передаем 'requestId'
+   // 3 параметр(arg) - то, что thunk принимает. В нашем случае это todolistId
+
+   // const action = tasksThunks.fetchTask.fulfilled(
+   //    { todolistID: "todolistId2", tasks: startState["todolistId2"] },
+   //    "requestId",
+   //    "todolistId2",
+   // );
+
+   // type FetchTasks = {
+   //    type: string;
+   //    payload: {
+   //       todolistID: string;
+   //       tasks: TaskType[];
+   //    };
+   // };
+
+   // const action: FetchTasks = {
+   //    type: tasksThunks.fetchTask.fulfilled.type,
+   //    payload: { todolistID: "todolistId2", tasks: startState["todolistId2"] },
+   // };
+
+   //Omit<из какого типа, что убрать>
+   // type FetchTasks = Omit<ReturnType<typeof tasksThunks.fetchTask.fulfilled>, "meta">;
+
+   const action: ActionTypeForeTest<typeof tasksThunks.fetchTask.fulfilled> = {
+      type: tasksThunks.fetchTask.fulfilled.type,
+      payload: { todolistID: "todolistId2", tasks: startState["todolistId2"] },
+   };
 
    const endState = tasksReducer(
       {

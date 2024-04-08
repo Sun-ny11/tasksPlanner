@@ -1,6 +1,7 @@
 import { tasksReducer } from "./tasksReducer";
-import { TodolistsDomainType, todolistActions, todolistsReducer } from "./todolistsReducer";
+import { TodolistsDomainType, todolistActions, todolistThunks, todolistsReducer } from "./todolistsReducer";
 import { taskTodoType } from "../Components/app/App";
+import { ActionTypeForeTest } from "utils/types/types";
 
 test("ids should be equals", () => {
    const startTasksState: taskTodoType = {};
@@ -29,12 +30,15 @@ test("ids should be equals", () => {
 });
 
 test("empty arrays should be added when we set todolist", () => {
-   const action = todolistActions.getTodolist({
-      todolists: [
-         { id: "1", title: "What to learn", addedDate: "", order: 0 },
-         { id: "2", title: "What to buy", addedDate: "", order: 0 },
-      ],
-   });
+   const action: ActionTypeForeTest<typeof todolistThunks.getTodolist.fulfilled> = {
+      type: todolistThunks.getTodolist.fulfilled.type,
+      payload: {
+         todolists: [
+            { id: "1", title: "What to learn", addedDate: "", order: 0 },
+            { id: "2", title: "What to buy", addedDate: "", order: 0 },
+         ],
+      },
+   };
 
    const endState = tasksReducer({}, action);
 

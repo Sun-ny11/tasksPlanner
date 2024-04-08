@@ -7,16 +7,17 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import {
    TodolistsDomainType,
-   removeTodolistTC,
    todolistActions,
+   todolistThunks,
    updateTodolistTC,
 } from "../../../reducers/todolistsReducer";
 import { AppRootStateType } from "../../../reducers/store";
-import { TaskStatus, TaskType } from "../../../api/todolists-api";
-import { addTaskTC, setTaskTC } from "../../../reducers/tasksReducer";
+import { TaskType } from "../../../api/todolists-api";
+import { tasksThunks } from "../../../reducers/tasksReducer";
 import { EditableSpan } from "../../management/EditableSpan";
 import { AddItemForm } from "../../management/AddItemForm";
 import { ButtonWithRedux } from "../../management/ButtonWithRedux";
+import { TaskStatus } from "common/enums/enums";
 
 type PropsType = {
    todolist: TodolistsDomainType;
@@ -39,7 +40,7 @@ export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
       if (demo) {
          return;
       }
-      dispatch(setTaskTC(props.todolist.id));
+      dispatch(tasksThunks.fetchTask(props.todolist.id));
    }, []);
 
    let tasksForTodolist = tasks;
@@ -70,12 +71,12 @@ export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
    const removeTodolistHandler = () => {
       console.log(props.todolist.entityStatus);
 
-      dispatch(removeTodolistTC(props.todolist.id));
+      dispatch(todolistThunks.removeTodolist(props.todolist.id));
    };
 
    const addTaskHandler = useCallback(
       (title: string) => {
-         dispatch(addTaskTC(props.todolist.id, title));
+         dispatch(tasksThunks.addTask({ todolistID: props.todolist.id, title }));
       },
       [dispatch, props.todolist.id],
    );
@@ -100,7 +101,7 @@ export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
             </IconButton>
          </h3>
          <AddItemForm collBack={addTaskHandler} disabled={props.todolist.entityStatus === "loading"} />
-         <ul>{tasksForTodolist?.map((t) => <Task key={t.id} todolistID={props.todolist.id} taskID={t.id} />)}</ul>
+         <ul>{tasksForTodolist?.map((t) => <Task key={t.id} todolistID={props.todolist.id} taskId={t.id} />)}</ul>
          <div>
             <ButtonWithRedux
                onClick={onAllClickHandler}

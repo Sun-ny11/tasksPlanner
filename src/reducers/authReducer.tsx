@@ -1,10 +1,11 @@
 import { Dispatch } from "@reduxjs/toolkit";
-import { authAPI } from "../api/todolists-api";
 import { FormikErrorType } from "../Components/features/login/Login";
-import { handelNetworkError, handelServerAppError } from "../utils/error-utils";
+import { handelNetworkError } from "../utils/error-utils";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { appActions } from "./appReducer";
 import { todolistActions } from "./todolistsReducer";
+import { handelServerAppError } from "utils/handelServerAppError";
+import { authAPI } from "api/auth-api";
 
 const slice = createSlice({
    name: "auth",
