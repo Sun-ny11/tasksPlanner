@@ -234,7 +234,10 @@ test("new array should be added when new todolist is added", () => {
       entityStatus: "idle",
    };
 
-   const action = todolistActions.addTodolist({ todo: newTodo });
+   const action: ActionTypeForeTest<typeof todolistThunks.addTodolist.fulfilled> = {
+      type: todolistThunks.addTodolist.fulfilled.type,
+      payload: { todo: newTodo },
+   };
 
    const endState = tasksReducer(startState, action);
 

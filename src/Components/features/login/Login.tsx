@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { AppRootStateType } from "../../../reducers/store";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { loginTC } from "reducers/authReducer";
+import { loginTC, selectIsLoggedIn } from "reducers/authReducer";
 
 export type FormikErrorType = {
    email?: string;
@@ -24,7 +24,7 @@ export type FormikErrorType = {
 
 export const Login = () => {
    const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch();
-   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);
+   const isLoggedIn = useSelector<AppRootStateType, boolean>(selectIsLoggedIn);
    //ускорит валидацию библиотека Yup !!!
 
    const formik = useFormik({

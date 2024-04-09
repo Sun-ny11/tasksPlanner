@@ -8,7 +8,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import ErrorSnackbar from "../errorSnackbar/ErrorSnackbar";
 import { useSelector } from "react-redux";
 import { AppRootStateType } from "../../reducers/store";
-import { RequestType } from "../../reducers/appReducer";
+import { RequestType, selectIsInitialized, selectStatus } from "../../reducers/appReducer";
 import { useDispatch } from "react-redux";
 import { Login } from "../features/login/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -26,9 +26,10 @@ type PropsType = {
 };
 
 function App({ demo = false }: PropsType) {
-   const status = useSelector<AppRootStateType, RequestType>((state) => state.app.status);
-   const isInitialized = useSelector<AppRootStateType, boolean>((state) => state.app.isInitialized);
+   const status = useSelector<AppRootStateType, RequestType>(selectStatus);
+   const isInitialized = useSelector<AppRootStateType, boolean>(selectIsInitialized);
    const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch();
+   console.log("APP");
 
    useEffect(() => {
       console.log(1);

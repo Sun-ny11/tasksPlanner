@@ -15,7 +15,7 @@ const slice = createSlice({
    reducers: {},
    extraReducers: (builder) => {
       builder
-         .addCase(todolistActions.addTodolist, (state, action) => {
+         .addCase(todolistThunks.addTodolist.fulfilled, (state, action) => {
             state[action.payload.todo.id] = [];
          })
          .addCase(todolistThunks.removeTodolist.fulfilled, (state, action) => {

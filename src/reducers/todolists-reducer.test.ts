@@ -1,3 +1,4 @@
+import { action } from "@storybook/addon-actions";
 import { RequestType } from "./appReducer";
 import {
    FilterValuesType,
@@ -48,7 +49,12 @@ test("correct todolist should be added", () => {
       entityStatus: "idle",
    };
 
-   const endState = todolistsReducer(startState, todolistActions.addTodolist({ todo: newTodo }));
+   const action: ActionTypeForeTest<typeof todolistThunks.addTodolist.fulfilled> = {
+      type: todolistThunks.addTodolist.fulfilled.type,
+      payload: { todo: newTodo },
+   };
+
+   const endState = todolistsReducer(startState, action);
 
    expect(endState.length).toBe(3);
    expect(endState[0].title).toBe(newTodolistTitle);
@@ -57,16 +63,15 @@ test("correct todolist should be added", () => {
 test("correct todolist should change its name", () => {
    let newTodolistTitle = "New Todolist";
 
-   const action = {
-      type: "CHANGE-TODOLIST-TITLE",
-      id: todolistId2,
+   const payload = {
+      todolistID: todolistId2,
       title: newTodolistTitle,
    };
-
-   const endState = todolistsReducer(
-      startState,
-      todolistActions.updateTodolist({ todolistID: action.id, title: action.title }),
-   );
+   const action: ActionTypeForeTest<typeof todolistThunks.updateTodolist.fulfilled> = {
+      type: todolistThunks.updateTodolist.fulfilled.type,
+      payload,
+   };
+   const endState = todolistsReducer(startState, action);
 
    expect(endState[0].title).toBe("What to learn");
    expect(endState[1].title).toBe(newTodolistTitle);

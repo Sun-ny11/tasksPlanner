@@ -5,12 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Task } from "./task/Task";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
-import {
-   TodolistsDomainType,
-   todolistActions,
-   todolistThunks,
-   updateTodolistTC,
-} from "../../../reducers/todolistsReducer";
+import { TodolistsDomainType, todolistActions, todolistThunks } from "../../../reducers/todolistsReducer";
 import { AppRootStateType } from "../../../reducers/store";
 import { TaskType } from "../../../api/todolists-api";
 import { tasksThunks } from "../../../reducers/tasksReducer";
@@ -83,7 +78,7 @@ export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
 
    const updateTodolistHandler = useCallback(
       (title: string) => {
-         dispatch(updateTodolistTC(props.todolist.id, title));
+         dispatch(todolistThunks.updateTodolist({ todolistID: props.todolist.id, title }));
       },
       [dispatch, props.todolist.id],
    );

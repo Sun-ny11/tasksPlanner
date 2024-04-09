@@ -22,7 +22,13 @@ const slice = createSlice({
          state.isInitialized = action.payload.status;
       },
    },
+   selectors: {
+      selectIsInitialized: (sliceState) => sliceState.isInitialized,
+      selectStatus: (sliceState) => sliceState.status,
+      selectError: (sliceState) => sliceState.error,
+   },
 });
 
 export const appReducer = slice.reducer;
 export const appActions = slice.actions;
+export const { selectError, selectIsInitialized, selectStatus } = slice.selectors;

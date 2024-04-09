@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppRootStateType } from "../../../reducers/store";
-import { TodolistsDomainType, addTodolistTC, todolistThunks } from "../../../reducers/todolistsReducer";
+import { TodolistsDomainType, todolistThunks } from "../../../reducers/todolistsReducer";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import Grid from "@mui/material/Grid";
@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import { AddItemForm } from "../../management/AddItemForm";
 import { Todolist } from "../todoList/Todolist";
 import { Navigate } from "react-router-dom";
+import { selectIsLoggedIn } from "reducers/authReducer";
 
 type TodolistsListType = {
    demo?: boolean;
@@ -16,7 +17,7 @@ type TodolistsListType = {
 
 export const TodolistsList: FC<TodolistsListType> = ({ demo = false }) => {
    let todolists = useSelector<AppRootStateType, TodolistsDomainType[]>((state) => state.todolists);
-   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);
+   const isLoggedIn = useSelector<AppRootStateType, boolean>(selectIsLoggedIn);
 
    const dispatch: ThunkDispatch<any, any, AnyAction> = useDispatch();
 
@@ -31,7 +32,7 @@ export const TodolistsList: FC<TodolistsListType> = ({ demo = false }) => {
 
    const addTodolist = useCallback(
       (title: string) => {
-         dispatch(addTodolistTC(title));
+         dispatch(todolistThunks.addTodolist(title));
       },
       [dispatch],
    );

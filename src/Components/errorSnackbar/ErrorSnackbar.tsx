@@ -4,10 +4,10 @@ import Alert from "@mui/material/Alert";
 import { useSelector } from "react-redux";
 import { AppRootStateType } from "../../reducers/store";
 import { useDispatch } from "react-redux";
-import { appActions } from "reducers/appReducer";
+import { appActions, selectError } from "reducers/appReducer";
 
 export default function ErrorSnackbar() {
-   const error = useSelector<AppRootStateType, string | null>((state) => state.app.error);
+   const error = useSelector<AppRootStateType, string | null>(selectError);
    const dispatch = useDispatch();
 
    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {

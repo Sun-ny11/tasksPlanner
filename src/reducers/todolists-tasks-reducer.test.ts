@@ -15,8 +15,10 @@ test("ids should be equals", () => {
       filter: "all",
       entityStatus: "idle",
    };
-
-   const action = todolistActions.addTodolist({ todo: newTodo });
+   const action: ActionTypeForeTest<typeof todolistThunks.addTodolist.fulfilled> = {
+      type: todolistThunks.addTodolist.fulfilled.type,
+      payload: { todo: newTodo },
+   };
 
    const endTasksState = tasksReducer(startTasksState, action);
    const endTodolistsState = todolistsReducer(startTodolistsState, action);

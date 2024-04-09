@@ -10,11 +10,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppRootStateType } from "../../reducers/store";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { logOutTC } from "../../reducers/authReducer";
+import { logOutTC, selectIsLoggedIn } from "../../reducers/authReducer";
 
 export default function ButtonAppBar() {
    const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch();
-   const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn);
+   const isLoggedIn = useSelector<AppRootStateType, boolean>(selectIsLoggedIn);
 
    const logOut = () => {
       dispatch(logOutTC());
