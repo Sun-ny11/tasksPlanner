@@ -14,7 +14,8 @@ import { useDispatch } from "react-redux";
 import { AppRootStateType } from "../../../reducers/store";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { loginTC, selectIsLoggedIn } from "reducers/authReducer";
+import { authThunks, selectIsLoggedIn } from "reducers/authReducer";
+import { BaseResponseType } from "utils/types/ResponseType";
 
 export type FormikErrorType = {
    email?: string;
@@ -35,30 +36,23 @@ export const Login = () => {
       },
       validate: (values) => {
          const errors: FormikErrorType = {};
-
          if (!values.password) {
             errors.password = "Required";
-         } else if (values.password.length < 2) {
-            errors.password = "Must be 2 characters or more";
          }
-
          if (!values.email) {
             errors.email = "Required";
-         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-            errors.email = "Invalid email address";
          }
          return errors;
       },
-      onSubmit: (values) => {
+      onSubmit: (values, formikHelpers) => {
          // alert(JSON.stringify(values, null, 2));
-         dispatch(loginTC(values));
-         formik.resetForm({
-            values: {
-               email: "",
-               password: "",
-               rememberMe: true,
-            },
-         }); //после отправки будут значения из resetForm
+         dispatch(authThunks.login(values))
+            .unwrap()
+            .catch((e: BaseResponseType) => {
+               if (e.fieldsErrors) {
+                  e.fieldsErrors.forEach((el) => formikHelpers.setFieldError(el.field, el.error));
+               }
+            });
       },
    });
 

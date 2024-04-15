@@ -24,8 +24,6 @@ export type AppRootStateType = ReturnType<typeof store.getState>;
 //Чтобы диспатчить санку в санку, общий тип
 // export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, UnknownAction>;
 
-//Общий тип всех reducer
-export type AppAllReducerType = any;
 // а это, чтобы можно было в консоли браузера обращаться к store в любой момент
 // @ts-ignore
 window.store = store;

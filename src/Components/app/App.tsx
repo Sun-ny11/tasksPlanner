@@ -14,8 +14,8 @@ import { Login } from "../features/login/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { initializeAppTC } from "../../reducers/authReducer";
 import { CircularProgress } from "@mui/material";
+import { authThunks } from "reducers/authReducer";
 
 export type taskTodoType = {
    [key: string]: TaskType[];
@@ -34,7 +34,7 @@ function App({ demo = false }: PropsType) {
    useEffect(() => {
       console.log(1);
 
-      dispatch(initializeAppTC());
+      dispatch(authThunks.initializeApp());
    }, []);
 
    if (!isInitialized) {

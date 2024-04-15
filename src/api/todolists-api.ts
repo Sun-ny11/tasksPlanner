@@ -1,5 +1,5 @@
 import { TaskPriorities, TaskStatus } from "common/enums/enums";
-import { ResponseType } from "../utils/types/ResponseType";
+import { BaseResponseType } from "../utils/types/ResponseType";
 import { instance } from "./instanse";
 
 //types
@@ -43,7 +43,7 @@ export const todolistsAPI = {
    //todolist
 
    createTodolists(title: string) {
-      return instance.post<ResponseType<{ item: todolistsType }>>("/todo-lists", { title: title });
+      return instance.post<BaseResponseType<{ item: todolistsType }>>("/todo-lists", { title: title });
       //Will return promise
       //CREATE
    },
@@ -53,14 +53,14 @@ export const todolistsAPI = {
       //READ
    },
    updateTodolists(title: string, todolistID: string) {
-      return instance.put<ResponseType>(`/todo-lists/${todolistID}`, {
+      return instance.put<BaseResponseType>(`/todo-lists/${todolistID}`, {
          title: title,
       });
       //Will return promise
       //UPDATE
    },
    deleteTodolists(todolistID: string) {
-      return instance.delete<ResponseType>(`/todo-lists/${todolistID}`);
+      return instance.delete<BaseResponseType>(`/todo-lists/${todolistID}`);
       //Will return promise
       //DELETE
    },
@@ -71,12 +71,12 @@ export const todolistsAPI = {
       return instance.get<GetTaskResponseType>(`/todo-lists/${todolistID}/tasks`);
    },
    createTask(todolistID: string, title: string) {
-      return instance.post<ResponseType<{ item: TaskType }>>(`/todo-lists/${todolistID}/tasks`, { title: title });
+      return instance.post<BaseResponseType<{ item: TaskType }>>(`/todo-lists/${todolistID}/tasks`, { title: title });
    },
    deleteTask(todolistID: string, taskId: string) {
-      return instance.delete<ResponseType>(`/todo-lists/${todolistID}/tasks/${taskId}`);
+      return instance.delete<BaseResponseType>(`/todo-lists/${todolistID}/tasks/${taskId}`);
    },
    updateTask(todolistID: string, taskID: string, model: modelType) {
-      return instance.put<ResponseType<{ item: TaskType }>>(`/todo-lists/${todolistID}/tasks/${taskID}`, model);
+      return instance.put<BaseResponseType<{ item: TaskType }>>(`/todo-lists/${todolistID}/tasks/${taskID}`, model);
    },
 };
