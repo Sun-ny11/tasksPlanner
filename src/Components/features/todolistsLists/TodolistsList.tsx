@@ -52,13 +52,7 @@ export const TodolistsList: FC<TodolistsListType> = ({ demo = false }) => {
                return (
                   <Grid key={el.id} item justifyContent={"space-around"}>
                      <Paper elevation={3} style={{ padding: "20px" }}>
-                        <Todolist
-                           todolist={el}
-                           // todolistID={el.id}
-                           // title={el.title}
-                           // filter={el.filter}
-                           demo={demo}
-                        />
+                        <Todolist todolist={el} demo={demo} />
                      </Paper>
                   </Grid>
                );

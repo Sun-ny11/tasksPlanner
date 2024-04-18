@@ -38,6 +38,9 @@ const slice = createSlice({
          .addCase(updateTodolist.fulfilled, (state, action) => {
             const index = state.findIndex((todo) => todo.id === action.payload.todolistID);
             if (index !== -1) state[index].title = action.payload.title;
+         })
+         .addCase(reorderTodolist.fulfilled, (state, action) => {
+            return [];
          });
    },
 });
@@ -151,6 +154,24 @@ const updateTodolist = createAppAsyncThunk<updateTodolistType, updateTodolistTyp
    },
 );
 
+const reorderTodolist = createAppAsyncThunk<void, { todolistId: string; putAfterItemId: string }>(
+   `${slice.name}/reorderTodolist`,
+   async ({ todolistId, putAfterItemId }, thunkAPI) => {
+      const { dispatch, rejectWithValue } = thunkAPI;
+      dispatch(appActions.setAppStatus({ status: "loading" }));
+      try {
+         const res = await todolistsAPI.reorderTodolists(todolistId, putAfterItemId);
+         if (res.data.resultCode === 0) {
+            dispatch(todolistThunks.getTodolist());
+            dispatch(appActions.setAppStatus({ status: "succeeded" }));
+         }
+      } catch (error: any) {
+         handelNetworkError(error, dispatch);
+         return rejectWithValue(null);
+      }
+   },
+);
+
 export const todolistsReducer = slice.reducer;
 export const todolistActions = slice.actions;
-export const todolistThunks = { getTodolist, removeTodolist, addTodolist, updateTodolist };
+export const todolistThunks = { getTodolist, removeTodolist, addTodolist, updateTodolist, reorderTodolist };

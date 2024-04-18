@@ -64,6 +64,9 @@ export const todolistsAPI = {
       //Will return promise
       //DELETE
    },
+   reorderTodolists(todolistId: string, putAfterItemId?: string) {
+      return instance.put<BaseResponseType>(`todo-lists/${todolistId}/reorder`, { putAfterItemId });
+   },
 
    //task
 

@@ -1,7 +1,5 @@
-import { Dispatch } from "@reduxjs/toolkit";
 import { FormikErrorType } from "../Components/features/login/Login";
-import { handelNetworkError, handleServerNetworkError } from "../utils/error-utils";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { appActions } from "./appReducer";
 import { todolistActions } from "./todolistsReducer";
 import { handelServerAppError } from "utils/handelServerAppError";

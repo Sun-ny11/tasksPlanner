@@ -5,6 +5,13 @@ import { handleServerNetworkError } from "./error-utils";
 import { appActions } from "reducers/appReducer";
 import { BaseResponseType } from "./types/ResponseType";
 
+/**
+ * thunkTryCatch - утилита для санок
+ * @param thunkAPI
+ * @param logic
+ * @returns
+ */
+
 export const thunkTryCatch = async <T>(
    thunkAPI: BaseThunkAPI<AppRootStateType, unknown, Dispatch, null | BaseResponseType>,
    logic: () => Promise<T>,

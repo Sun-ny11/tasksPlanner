@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo } from "react";
+import React, { DragEvent, memo, useCallback, useEffect, useMemo } from "react";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,7 @@ type PropsType = {
    // filter: FilterValuesType
    demo?: boolean;
 };
+//sad
 
 export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
    console.log("Todolist " + props.todolist.title);
@@ -83,8 +84,42 @@ export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
       [dispatch, props.todolist.id],
    );
 
+   const dragStartHandler = (e: DragEvent<HTMLDivElement>, todo: TodolistsDomainType) => {
+      //взяли карту
+      e.dataTransfer.setData("string", todo.id);
+      console.log(todo);
+   };
+   const dragLeaveHandler = (e: DragEvent<HTMLDivElement>) => {
+      //вышли за пределы
+      e.currentTarget.style.opacity = "1";
+   };
+   const dragEndHandler = (e: DragEvent<HTMLDivElement>) => {
+      //отпустили перемещение
+   };
+   const dragOverHandler = (e: DragEvent<HTMLDivElement>) => {
+      //находимся над другим объектом
+
+      e.preventDefault();
+      e.currentTarget.style.opacity = "0.5";
+   };
+   const dropHandler = (e: DragEvent<HTMLDivElement>, todo: TodolistsDomainType) => {
+      // отпустили и ждем действие
+      e.preventDefault();
+      e.currentTarget.style.opacity = "1";
+
+      const draggedTodoId = e.dataTransfer.getData("string");
+      dispatch(todolistThunks.reorderTodolist({ todolistId: draggedTodoId, putAfterItemId: todo.id }));
+   };
+
    return (
-      <div>
+      <div
+         draggable
+         onDragStart={(e) => dragStartHandler(e, props.todolist)}
+         onDragLeave={dragLeaveHandler}
+         onDragEnd={dragEndHandler}
+         onDragOver={dragOverHandler}
+         onDrop={(e) => dropHandler(e, props.todolist)}
+      >
          <h3>
             <EditableSpan oldTitle={props.todolist.title} collBack={updateTodolistHandler} />
             <IconButton
