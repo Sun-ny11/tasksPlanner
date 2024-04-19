@@ -106,9 +106,9 @@ export const Todolist = memo(({ demo = false, ...props }: PropsType) => {
       // отпустили и ждем действие
       e.preventDefault();
       e.currentTarget.style.opacity = "1";
-
       const draggedTodoId = e.dataTransfer.getData("string");
-      dispatch(todolistThunks.reorderTodolist({ todolistId: draggedTodoId, putAfterItemId: todo.id }));
+
+      dispatch(todolistThunks.reorderTodolist({ draggableId: draggedTodoId, droppableId: todo.id }));
    };
 
    return (

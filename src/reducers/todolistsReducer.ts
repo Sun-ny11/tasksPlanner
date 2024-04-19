@@ -1,9 +1,10 @@
 import { todolistsAPI, todolistsType } from "../api/todolists-api";
 import { RequestType, appActions } from "./appReducer";
 import { handelNetworkError } from "../utils/error-utils";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice, current } from "@reduxjs/toolkit";
 import { handelServerAppError } from "utils/handelServerAppError";
 import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
+import { AppRootStateType } from "./store";
 
 const slice = createSlice({
    name: "todolists",
@@ -40,7 +41,12 @@ const slice = createSlice({
             if (index !== -1) state[index].title = action.payload.title;
          })
          .addCase(reorderTodolist.fulfilled, (state, action) => {
-            return [];
+            current;
+            const { draggableTodolistIndex, droppableTodolistIndex } = action.payload;
+
+            const element = state.splice(draggableTodolistIndex, 1);
+
+            state.splice(droppableTodolistIndex, 0, element[0]);
          });
    },
 });
@@ -53,19 +59,6 @@ export type TodolistsDomainType = todolistsType & {
    filter: FilterValuesType;
    entityStatus: RequestType;
 };
-
-//action
-
-//thunk
-
-//Для того чтобы диспачить санку из санки:
-
-// ThunkAction<void,AppRootStateType,unknown,AppAllReducerType> типизация
-
-// 1 параметр - описываем, что возвращает thunk
-// 2 параметр - state всего приложения
-// 3 параметр - экстра аргументы
-// 4 параметр - все action всего App
 
 const getTodolist = createAppAsyncThunk<{ todolists: todolistsType[] }, void>(
    `${slice.name}/getTodolist`,
@@ -154,23 +147,38 @@ const updateTodolist = createAppAsyncThunk<updateTodolistType, updateTodolistTyp
    },
 );
 
-const reorderTodolist = createAppAsyncThunk<void, { todolistId: string; putAfterItemId: string }>(
-   `${slice.name}/reorderTodolist`,
-   async ({ todolistId, putAfterItemId }, thunkAPI) => {
-      const { dispatch, rejectWithValue } = thunkAPI;
-      dispatch(appActions.setAppStatus({ status: "loading" }));
-      try {
-         const res = await todolistsAPI.reorderTodolists(todolistId, putAfterItemId);
-         if (res.data.resultCode === 0) {
-            dispatch(todolistThunks.getTodolist());
-            dispatch(appActions.setAppStatus({ status: "succeeded" }));
-         }
-      } catch (error: any) {
-         handelNetworkError(error, dispatch);
+const reorderTodolist = createAppAsyncThunk<
+   { draggableTodolistIndex: number; droppableTodolistIndex: number },
+   { draggableId: string; droppableId: string }
+>(`${slice.name}/reorderTodolist`, async ({ draggableId, droppableId }, thunkAPI) => {
+   const { dispatch, rejectWithValue, getState } = thunkAPI;
+   dispatch(appActions.setAppStatus({ status: "loading" }));
+
+   const state = getState() as AppRootStateType;
+   const draggableTodolist = state.todolists.find((el) => el.id === draggableId) as TodolistsDomainType;
+   const droppableTodolist = state.todolists.find((el) => el.id === droppableId) as TodolistsDomainType;
+
+   const draggableTodolistIndex = state.todolists.indexOf(draggableTodolist);
+   const droppableTodolistIndex = state.todolists.indexOf(droppableTodolist);
+
+   const putAfterTodolistIndex =
+      draggableTodolistIndex > droppableTodolistIndex ? droppableTodolistIndex - 1 : droppableTodolistIndex;
+
+   const putAfterTodolistId = state.todolists[putAfterTodolistIndex]?.id;
+
+   try {
+      const res = await todolistsAPI.reorderTodolists(draggableId, putAfterTodolistId);
+      if (res.data.resultCode === 0) {
+         dispatch(appActions.setAppStatus({ status: "succeeded" }));
+         return { draggableTodolistIndex, droppableTodolistIndex };
+      } else {
          return rejectWithValue(null);
       }
-   },
-);
+   } catch (error: any) {
+      handelNetworkError(error, dispatch);
+      return rejectWithValue(null);
+   }
+});
 
 export const todolistsReducer = slice.reducer;
 export const todolistActions = slice.actions;
