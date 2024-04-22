@@ -1,0 +1,62 @@
+import React, { useEffect } from "react";
+import "./App.css";
+import { ButtonAppBar } from "../Components/buttonAppBar/ButtonAppBar";
+import Container from "@mui/material/Container";
+import { TodolistsList } from "../features/todolistsLists/ui/TodolistsList";
+import LinearProgress from "@mui/material/LinearProgress";
+import ErrorSnackbar from "../Components/errorSnackbar/ErrorSnackbar";
+import { useSelector } from "react-redux";
+import { AppRootStateType } from "./store";
+import { RequestType, selectIsInitialized, selectStatus } from "./appSlice";
+import { useDispatch } from "react-redux";
+import { Login } from "../features/login/ui/Login";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import { CircularProgress } from "@mui/material";
+import { authThunks } from "features/login/model/authSlice";
+import { TaskType } from "features/todolistsLists/api/tasksApi.types";
+
+export type taskTodoType = {
+   [key: string]: TaskType[];
+};
+
+type Props = {
+   demo?: boolean; //for stories
+};
+
+function App({ demo = false }: Props) {
+   const status = useSelector<AppRootStateType, RequestType>(selectStatus);
+   const isInitialized = useSelector<AppRootStateType, boolean>(selectIsInitialized);
+   const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch();
+
+   useEffect(() => {
+      dispatch(authThunks.initializeApp());
+   }, []);
+
+   if (!isInitialized) {
+      return (
+         <div style={{ position: "fixed", top: "30%", textAlign: "center", width: "100%" }}>
+            <CircularProgress />
+         </div>
+      );
+   }
+
+   return (
+      <div className="App">
+         <ErrorSnackbar />
+         <ButtonAppBar />
+         {status === "loading" && <LinearProgress />}
+         <Container>
+            <Routes>
+               <Route path={"/second-todolist"} element={<TodolistsList demo={demo} />} />
+               <Route path={"/login"} element={<Login />} />
+               <Route path={"/error404"} element={<h1>404 page not found</h1>} />
+               <Route path={"/*"} element={<Navigate to={"/error404"} />} />
+            </Routes>
+         </Container>
+      </div>
+   );
+}
+
+export default App;

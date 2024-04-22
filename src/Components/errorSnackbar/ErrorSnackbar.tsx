@@ -2,9 +2,9 @@ import * as React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useSelector } from "react-redux";
-import { AppRootStateType } from "../../reducers/store";
+import { AppRootStateType } from "../../app/store";
 import { useDispatch } from "react-redux";
-import { appActions, selectError } from "reducers/appReducer";
+import { appActions, selectError } from "app/appSlice";
 
 export default function ErrorSnackbar() {
    const error = useSelector<AppRootStateType, string | null>(selectError);
