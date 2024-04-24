@@ -29,12 +29,12 @@ export default meta;
 type Story = StoryObj<typeof AddItemForm>;
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const AddItemFormStory: Story = {
-   render: () => <AddItemForm collBack={action("Callback")} />,
-};
-export const AddItemFormDisabled: Story = {
-   render: () => <AddItemForm disabled={true} collBack={action("Callback")} />,
-};
+// export const AddItemFormStory: Story = {
+//    render: () => <AddItemForm collBack={action("Callback")} />,
+// };
+// export const AddItemFormDisabled: Story = {
+//    render: () => <AddItemForm disabled={true} collBack={action("Callback")} />,
+// };
 
 const AddItemFormError = (props: AddItemFormProps) => {
    let [title, setTitle] = useState("");
@@ -89,6 +89,6 @@ const AddItemFormError = (props: AddItemFormProps) => {
    );
 };
 
-export const AddItemFormErrorStory: Story = {
-   render: () => <AddItemFormError collBack={action("Callback")} />,
-};
+// export const AddItemFormErrorStory: Story = {
+//    render: () => <AddItemFormError collBack={action("Callback")} />,
+// };

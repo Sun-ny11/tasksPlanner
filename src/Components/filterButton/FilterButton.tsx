@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React, { memo } from "react";
 import Button from "@mui/material/Button";
 
 type FilterButtonProps = {
@@ -9,7 +9,6 @@ type FilterButtonProps = {
 };
 
 export const FilterButton = memo(({ color, variant, onClick, name }: FilterButtonProps) => {
-   console.log("ButtonWithRedux");
    return (
       <Button color={color} onClick={onClick} variant={variant}>
          {name}

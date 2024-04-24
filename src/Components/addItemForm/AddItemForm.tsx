@@ -1,23 +1,21 @@
-import React, { ChangeEvent, KeyboardEvent, FC, useState, memo } from "react";
+import React, { ChangeEvent, KeyboardEvent, useState, memo } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
 export type AddItemFormProps = {
    disabled?: boolean;
-   collBack: (title: string) => void;
+   collBack: (title: string) => Promise<any>;
 };
 
-export const AddItemForm: FC<AddItemFormProps> = memo(({ disabled = false, collBack }) => {
-   console.log("AddItemForm");
-
+export const AddItemForm = memo(({ disabled = false, collBack }: AddItemFormProps) => {
    let [title, setTitle] = useState("");
    let [error, setError] = useState<string | null>(null);
 
-   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+   const changeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
       setTitle(e.currentTarget.value);
    };
 
-   const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+   const onKeyPressAddTask = (e: KeyboardEvent<HTMLInputElement>) => {
       if (error) setError(null);
       if (e.charCode === 13) {
          addTask();
@@ -26,8 +24,15 @@ export const AddItemForm: FC<AddItemFormProps> = memo(({ disabled = false, collB
 
    const addTask = () => {
       if (title.trim() !== "") {
-         collBack(title.trim());
-         setTitle("");
+         collBack(title.trim())
+            .then((res) => {
+               setTitle("");
+            })
+            .catch((error: any) => {
+               setError("Ooops, it's error");
+               // Для отображения ошибки в флде
+               // setError(error.messages[0]);
+            });
       } else {
          setError("Title is required");
       }
@@ -45,17 +50,12 @@ export const AddItemForm: FC<AddItemFormProps> = memo(({ disabled = false, collB
             label={error ? error : "Outlined"}
             variant="outlined"
             value={title}
-            onChange={onChangeHandler}
-            onKeyPress={onKeyPressHandler}
+            onChange={changeTitleHandler}
+            onKeyPress={onKeyPressAddTask}
             size="small"
             error={!!error}
             disabled={disabled}
          />
-         {/* <input value={title}
-            onChange={onChangeHandler}
-            onKeyPress={onKeyPressHandler}
-            className={error ? "error" : ""}
-         /> */}
          <Button onClick={addTask} size="small" variant="contained" style={styles} disabled={disabled}>
             +
          </Button>

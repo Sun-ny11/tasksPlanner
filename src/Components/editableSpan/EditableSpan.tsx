@@ -1,28 +1,28 @@
-import React, { ChangeEvent, FC, memo, useState } from "react";
+import React, { ChangeEvent, memo, useState } from "react";
 
-type EditableSpanProps = {
+type Props = {
    oldTitle: string;
    collBack: (title: string) => void;
 };
 
-export const EditableSpan: FC<EditableSpanProps> = memo((props) => {
+export const EditableSpan = memo(({ oldTitle, collBack }: Props) => {
    console.log("EditableSpan");
 
    const [edit, setEdit] = useState(false);
-   const [inputValue, setInputValue] = useState(props.oldTitle);
+   const [inputValue, setInputValue] = useState(oldTitle);
 
-   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+   const changeValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
       setInputValue(e.currentTarget.value);
    };
 
    const activateEditHandler = () => {
       setEdit(!edit);
-      props.collBack(inputValue);
+      collBack(inputValue);
    };
 
    return edit ? (
-      <input onChange={onChangeHandler} onBlur={activateEditHandler} autoFocus value={inputValue} type="text" />
+      <input onChange={changeValueHandler} onBlur={activateEditHandler} autoFocus value={inputValue} type="text" />
    ) : (
-      <span onDoubleClick={activateEditHandler}>{props.oldTitle}</span>
+      <span onDoubleClick={activateEditHandler}>{oldTitle}</span>
    );
 });

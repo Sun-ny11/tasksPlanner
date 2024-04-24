@@ -28,9 +28,16 @@ export const TodolistsList: FC<TodolistsListType> = ({ demo = false }) => {
       dispatch(todolistThunks.getTodolist());
    }, []);
 
-   const addTodolist = useCallback(
+   /**
+    *
+    * @param title
+    * @returns - промис для AddItemForm
+    * @unwrap - санка всегда резолвится если созданна через createAsyncThunk, unwrap вернет привычную логику
+    *
+    */
+   const addTodolistHandler = useCallback(
       (title: string) => {
-         dispatch(todolistThunks.addTodolist(title));
+         return dispatch(todolistThunks.addTodolist(title)).unwrap();
       },
       [dispatch],
    );
@@ -42,7 +49,7 @@ export const TodolistsList: FC<TodolistsListType> = ({ demo = false }) => {
    return (
       <>
          <Grid container style={{ padding: "20px" }}>
-            <AddItemForm collBack={addTodolist} />
+            <AddItemForm collBack={addTodolistHandler} />
          </Grid>
 
          <Grid container spacing={3} justifyContent={"center"}>

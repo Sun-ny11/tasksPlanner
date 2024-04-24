@@ -1,8 +1,6 @@
 import { todolistsAPI } from "../api/todolistsApi";
-import { RequestType, appActions } from "../../../app/appSlice";
-import { handelNetworkError } from "../../../common/utils/error-utils";
+import { RequestType } from "../../../app/appSlice";
 import { PayloadAction, createSlice, current } from "@reduxjs/toolkit";
-import { handelServerAppError } from "common/utils/handelServerAppError";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { AppRootStateType } from "../../../app/store";
 import { TodolistsType } from "../api/todolistsApi.types";
@@ -67,18 +65,11 @@ export type TodolistsDomainType = TodolistsType & {
 const getTodolist = createAppAsyncThunk<{ todolists: TodolistsType[] }, void>(
    `${slice.name}/getTodolist`,
    async (_, thunkAPI) => {
-      const { dispatch, rejectWithValue } = thunkAPI;
-      dispatch(appActions.setAppStatus({ status: "loading" }));
-      try {
-         const res = await todolistsAPI.readTodolists();
-         if (res.statusText === "") {
-            dispatch(appActions.setAppStatus({ status: "succeeded" }));
-            return { todolists: res.data };
-         } else {
-            return rejectWithValue(null);
-         }
-      } catch (error: any) {
-         handelNetworkError(error, dispatch);
+      const { rejectWithValue } = thunkAPI;
+      const res = await todolistsAPI.readTodolists();
+      if (res.statusText === "") {
+         return { todolists: res.data };
+      } else {
          return rejectWithValue(null);
       }
    },
@@ -88,20 +79,13 @@ const removeTodolist = createAppAsyncThunk<{ todolistID: string }, string>(
    `${slice.name}/removeTodolist`,
    async (todolistID, thunkAPI) => {
       const { dispatch, rejectWithValue } = thunkAPI;
-      dispatch(appActions.setAppStatus({ status: "loading" }));
       dispatch(todolistActions.changeTodolistEntityStatus({ status: "loading", todolistID }));
-      try {
-         const res = await todolistsAPI.deleteTodolists(todolistID);
-         if (res.data.resultCode === 0) {
-            dispatch(appActions.setAppStatus({ status: "succeeded" }));
-            return { todolistID };
-         } else {
-            handelServerAppError(res.data, dispatch);
-            return rejectWithValue(null);
-         }
-      } catch (error: any) {
-         handelNetworkError(error, dispatch);
-         return rejectWithValue(null);
+      const res = await todolistsAPI.deleteTodolists(todolistID);
+
+      if (res.data.resultCode === 0) {
+         return { todolistID };
+      } else {
+         return rejectWithValue(res.data);
       }
    },
 );
@@ -109,20 +93,12 @@ const removeTodolist = createAppAsyncThunk<{ todolistID: string }, string>(
 const addTodolist = createAppAsyncThunk<{ todo: TodolistsType }, string>(
    `${slice.name}/addTodolist`,
    async (title, thunkAPI) => {
-      const { dispatch, rejectWithValue } = thunkAPI;
-      dispatch(appActions.setAppStatus({ status: "loading" }));
-      try {
-         const res = await todolistsAPI.createTodolists(title);
-         if (res.data.resultCode === 0) {
-            dispatch(appActions.setAppStatus({ status: "succeeded" }));
-            return { todo: res.data.data.item };
-         } else {
-            handelServerAppError(res.data, dispatch);
-            return rejectWithValue(null);
-         }
-      } catch (error: any) {
-         handelNetworkError(error, dispatch);
-         return rejectWithValue(null);
+      const { rejectWithValue } = thunkAPI;
+      const res = await todolistsAPI.createTodolists(title);
+      if (res.data.resultCode === 0) {
+         return { todo: res.data.data.item };
+      } else {
+         return rejectWithValue(res.data);
       }
    },
 );
@@ -131,22 +107,13 @@ type updateTodolistType = { todolistID: string; title: string };
 const updateTodolist = createAppAsyncThunk<updateTodolistType, updateTodolistType>(
    `${slice.name}/updateTodolist`,
    async ({ todolistID, title }, thunkAPI) => {
-      const { dispatch, rejectWithValue } = thunkAPI;
-      dispatch(appActions.setAppStatus({ status: "loading" }));
+      const { rejectWithValue } = thunkAPI;
 
-      try {
-         const res = await todolistsAPI.updateTodolists(title, todolistID);
-         if (res.data.resultCode === 0) {
-            dispatch(appActions.setAppStatus({ status: "succeeded" }));
-            return { todolistID, title };
-         } else {
-            handelServerAppError(res.data, dispatch);
-            return rejectWithValue(null);
-         }
-      } catch (error: any) {
-         handelNetworkError(error, dispatch);
-
-         return rejectWithValue(null);
+      const res = await todolistsAPI.updateTodolists(title, todolistID);
+      if (res.data.resultCode === 0) {
+         return { todolistID, title };
+      } else {
+         return rejectWithValue(res.data);
       }
    },
 );
@@ -155,8 +122,7 @@ const reorderTodolist = createAppAsyncThunk<
    { draggableTodolistIndex: number; droppableTodolistIndex: number },
    { draggableId: string; droppableId: string }
 >(`${slice.name}/reorderTodolist`, async ({ draggableId, droppableId }, thunkAPI) => {
-   const { dispatch, rejectWithValue, getState } = thunkAPI;
-   dispatch(appActions.setAppStatus({ status: "loading" }));
+   const { rejectWithValue, getState } = thunkAPI;
 
    const state = getState() as AppRootStateType;
    const draggableTodolist = state.todolists.find((el) => el.id === draggableId) as TodolistsDomainType;
@@ -170,17 +136,11 @@ const reorderTodolist = createAppAsyncThunk<
 
    const putAfterTodolistId = state.todolists[putAfterTodolistIndex]?.id;
 
-   try {
-      const res = await todolistsAPI.reorderTodolists(draggableId, putAfterTodolistId);
-      if (res.data.resultCode === 0) {
-         dispatch(appActions.setAppStatus({ status: "succeeded" }));
-         return { draggableTodolistIndex, droppableTodolistIndex };
-      } else {
-         return rejectWithValue(null);
-      }
-   } catch (error: any) {
-      handelNetworkError(error, dispatch);
-      return rejectWithValue(null);
+   const res = await todolistsAPI.reorderTodolists(draggableId, putAfterTodolistId);
+   if (res.data.resultCode === 0) {
+      return { draggableTodolistIndex, droppableTodolistIndex };
+   } else {
+      return rejectWithValue(res.data);
    }
 });
 

@@ -1,14 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { taskTodoType } from "../../../app/App";
-
-import { handelNetworkError, handleServerNetworkError } from "../../../common/utils/error-utils";
-import { appActions } from "../../../app/appSlice";
 import { todolistActions, todolistThunks } from "./todolistsSlice";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
-import { handelServerAppError } from "common/utils/handelServerAppError";
 import { tasksAPI } from "../api/tasksApi";
 import { ModelType, TaskType } from "../api/tasksApi.types";
-import { number } from "prop-types";
 
 const slice = createSlice({
    name: "tasks",
@@ -66,18 +61,9 @@ export type updateDomainTaskModelType = {
 
 export const fetchTask = createAppAsyncThunk<{ todolistID: string; tasks: TaskType[] }, string>(
    `${slice.name}/setTask`,
-   async (todolistID, thunkAPI) => {
-      const { dispatch, rejectWithValue } = thunkAPI;
-      dispatch(appActions.setAppStatus({ status: "loading" }));
-      try {
-         const data = await tasksAPI.readTask(todolistID);
-
-         dispatch(appActions.setAppStatus({ status: "succeeded" }));
-         return { todolistID, tasks: data.data.items };
-      } catch (error: any) {
-         handleServerNetworkError(error, dispatch);
-         return rejectWithValue(null);
-      }
+   async (todolistID) => {
+      const data = await tasksAPI.readTask(todolistID);
+      return { todolistID, tasks: data.data.items };
    },
 );
 
@@ -87,20 +73,12 @@ const removeTask = createAppAsyncThunk<removeTaskType, removeTaskType>(
    `${slice.name}/removeTask`,
    async ({ todolistID, taskId }, thunkAPI) => {
       const { dispatch, rejectWithValue } = thunkAPI;
-      dispatch(appActions.setAppStatus({ status: "loading" }));
 
-      try {
-         const data = await tasksAPI.deleteTask(todolistID, taskId);
-         if (data.data.resultCode === 0) {
-            dispatch(appActions.setAppStatus({ status: "succeeded" }));
-            return { todolistID, taskId };
-         } else {
-            handelServerAppError(data.data, dispatch);
-            return rejectWithValue(null);
-         }
-      } catch (error: any) {
-         handelNetworkError(error, dispatch);
-         return rejectWithValue(null);
+      const data = await tasksAPI.deleteTask(todolistID, taskId);
+      if (data.data.resultCode === 0) {
+         return { todolistID, taskId };
+      } else {
+         return rejectWithValue(data.data);
       }
    },
 );
@@ -108,21 +86,13 @@ const removeTask = createAppAsyncThunk<removeTaskType, removeTaskType>(
 const addTask = createAppAsyncThunk<{ newTask: TaskType }, { todolistID: string; title: string }>(
    `${slice.name}/addTask`,
    async ({ todolistID, title }, thunkAPI) => {
-      const { dispatch, rejectWithValue } = thunkAPI;
-      dispatch(appActions.setAppStatus({ status: "loading" }));
+      const { rejectWithValue } = thunkAPI;
 
-      try {
-         const res = await tasksAPI.createTask(todolistID, title);
-         if (res.data.resultCode === 0) {
-            dispatch(appActions.setAppStatus({ status: "succeeded" }));
-            return { newTask: res.data.data.item };
-         } else {
-            handelServerAppError(res.data, dispatch);
-            return rejectWithValue(null);
-         }
-      } catch (error: any) {
-         handleServerNetworkError(error, dispatch);
-         return rejectWithValue(null);
+      const res = await tasksAPI.createTask(todolistID, title);
+      if (res.data.resultCode === 0) {
+         return { newTask: res.data.data.item };
+      } else {
+         return rejectWithValue(res.data);
       }
    },
 );
@@ -130,40 +100,30 @@ const addTask = createAppAsyncThunk<{ newTask: TaskType }, { todolistID: string;
 const updateTask = createAppAsyncThunk<
    { todolistID: string; model: updateDomainTaskModelType; taskId: string },
    { todolistID: string; modelDomain: updateDomainTaskModelType; taskId: string }
-   //можно вынести в один тип
 >(`${slice.name}/updateTask`, async ({ todolistID, modelDomain, taskId }, thunkAPI) => {
-   const { dispatch, rejectWithValue, getState } = thunkAPI;
+   const { rejectWithValue, getState } = thunkAPI;
 
-   dispatch(appActions.setAppStatus({ status: "loading" }));
-
-   try {
-      const state = getState();
-      const task = state.tasks[todolistID].find((el) => el.id === taskId);
-      if (!task) {
-         return rejectWithValue(null);
-      }
-
-      const modelApi: ModelType = {
-         title: task.title,
-         description: task.description,
-         status: task.status,
-         priority: task.priority,
-         startDate: task.startDate,
-         deadline: task.deadline,
-         ...modelDomain, //перезапишет те свойства modelApi, которые придут внутри modelDomain
-      };
-
-      const res = await tasksAPI.updateTask(todolistID, taskId, modelApi);
-      if (res.data.resultCode === 0) {
-         dispatch(appActions.setAppStatus({ status: "succeeded" }));
-         return { todolistID, model: modelDomain, taskId };
-      } else {
-         handleServerNetworkError(res.data, dispatch);
-         return rejectWithValue(null);
-      }
-   } catch (error: any) {
-      handelNetworkError(error, dispatch);
+   const state = getState();
+   const task = state.tasks[todolistID].find((el) => el.id === taskId);
+   if (!task) {
       return rejectWithValue(null);
+   }
+
+   const modelApi: ModelType = {
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+      startDate: task.startDate,
+      deadline: task.deadline,
+      ...modelDomain, //перезапишет те свойства modelApi, которые придут внутри modelDomain
+   };
+
+   const res = await tasksAPI.updateTask(todolistID, taskId, modelApi);
+   if (res.data.resultCode === 0) {
+      return { todolistID, model: modelDomain, taskId };
+   } else {
+      return rejectWithValue(res.data);
    }
 });
 

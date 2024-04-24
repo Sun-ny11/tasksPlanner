@@ -1,4 +1,5 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { message0 } from "./../../../homework/homework-tuesday/src/s2-homeworks/hw01/HW1";
+import { PayloadAction, createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit";
 
 export type RequestType = "idle" | "loading" | "succeeded" | "failed";
 
@@ -26,6 +27,24 @@ const slice = createSlice({
       selectIsInitialized: (sliceState) => sliceState.isInitialized,
       selectStatus: (sliceState) => sliceState.status,
       selectError: (sliceState) => sliceState.error,
+   },
+   extraReducers: (builder) => {
+      builder
+         // https://redux-toolkit.js.org/api/matching-utilities
+         .addMatcher(isPending, (state, action) => {
+            state.status = "loading";
+         })
+         .addMatcher(isFulfilled, (state, action) => {
+            state.status = "succeeded";
+         })
+         .addMatcher(isRejected, (state, action: any) => {
+            state.status = "failed";
+            if (action.payload) {
+               state.error = action.payload.messages[0];
+            } else {
+               state.error = action.error.message;
+            }
+         });
    },
 });
 
