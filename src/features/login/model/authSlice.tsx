@@ -34,7 +34,6 @@ const login = createAppAsyncThunk<{ isLoggedIn: boolean }, FormikErrorType>(
       if (res.data.resultCode === 0) {
          return { isLoggedIn: true };
       } else {
-         const isShowAppError = !res.data.fieldsErrors.length;
          return rejectWithValue(res.data);
       }
    },
@@ -52,15 +51,12 @@ const logOut = createAppAsyncThunk<{ isLoggedIn: boolean }, void>(`${slice.name}
    }
 });
 
-//ошибка при старте You are not authorized
-
 const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, void>(
    `${slice.name}/initializeApp`,
    async (_, thunkAPI) => {
       const { dispatch, rejectWithValue } = thunkAPI;
-      let res = await authAPI.me().finally(() => {
-         dispatch(appActions.setIsInitialized({ status: true }));
-      });
+      let res = await authAPI.me();
+      dispatch(appActions.setIsInitialized({ status: true }));
 
       if (res.data.resultCode === 0) {
          return { isLoggedIn: true };

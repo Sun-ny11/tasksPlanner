@@ -1,5 +1,5 @@
-import { message0 } from "./../../../homework/homework-tuesday/src/s2-homeworks/hw01/HW1";
 import { PayloadAction, createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit";
+import { authThunks } from "features/login/model/authSlice";
 
 export type RequestType = "idle" | "loading" | "succeeded" | "failed";
 
@@ -39,6 +39,9 @@ const slice = createSlice({
          })
          .addMatcher(isRejected, (state, action: any) => {
             state.status = "failed";
+            if (action.type === authThunks.initializeApp.rejected.type) {
+               return;
+            }
             if (action.payload) {
                state.error = action.payload.messages[0];
             } else {
