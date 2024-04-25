@@ -9,14 +9,19 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Navigate } from "react-router-dom";
 import { useLogin } from "../lib/useLogin";
+import { useSelector } from "react-redux";
+import { selectCaptchaUrl } from "../model/authSlice";
+import { Captcha } from "./Captcha";
 
 export type FormikErrorType = {
    email?: string;
    password?: string;
    rememberMe?: boolean;
+   captchaString?: string;
 };
 
 export const Login = () => {
+   const captcha = useSelector(selectCaptchaUrl);
    const { isLoggedIn, formik } = useLogin();
 
    if (isLoggedIn) {
@@ -73,9 +78,14 @@ export const Login = () => {
                         }
                      />
                      {/* onChange начнет всплытие до form onSubmit */}
-                     <Button type={"submit"} variant={"contained"} color={"primary"}>
-                        Login
-                     </Button>
+
+                     {!!captcha ? (
+                        <Captcha formik={formik} />
+                     ) : (
+                        <Button type={"submit"} variant={"contained"} color={"primary"}>
+                           Login
+                        </Button>
+                     )}
                   </FormGroup>
                </FormControl>
             </form>

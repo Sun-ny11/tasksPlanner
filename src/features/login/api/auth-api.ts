@@ -18,5 +18,8 @@ export class AuthAPI {
    public me() {
       return instance.get<BaseResponseType<LoginType>>("auth/me");
    }
+   public getCaptchaUrl() {
+      return instance.get<{ url: string }>("/security/get-captcha-url");
+   }
 }
 export const authAPI = new AuthAPI();

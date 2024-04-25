@@ -17,6 +17,7 @@ export const useLogin = () => {
          email: "",
          password: "",
          rememberMe: false,
+         captcha: "",
       },
       validate: (values) => {
          const errors: FormikErrorType = {};
