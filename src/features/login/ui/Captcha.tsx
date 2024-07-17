@@ -5,10 +5,12 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useSelector } from "react-redux";
-import { selectCaptchaUrl } from "../model/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { authThunks, selectCaptchaUrl } from "../model/authSlice";
 import { FormikProps } from "formik";
-
+import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
+import { AppRootStateType } from "app/store";
+import RefreshIcon from "@mui/icons-material/Refresh";
 type Props = {
    formik: FormikProps<{
       email: string;
@@ -18,6 +20,8 @@ type Props = {
    }>;
 };
 export const Captcha = ({ formik }: Props) => {
+   const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch();
+
    const captchaUrl = useSelector(selectCaptchaUrl);
 
    const [open, setOpen] = React.useState(true);
@@ -46,8 +50,16 @@ export const Captcha = ({ formik }: Props) => {
             }}
          >
             <DialogTitle>Enter the characters from the image</DialogTitle>
-            <DialogContent>
-               <img src={captchaUrl} alt="captcha" />
+            <DialogContent style={{ display: "flex", flexDirection: "column" }}>
+               <Button
+                  endIcon={<img src={captchaUrl} alt="captcha" />}
+                  onClick={() => {
+                     dispatch(authThunks.captchaUrlThunk());
+                  }}
+               >
+                  <RefreshIcon />
+               </Button>
+
                <TextField
                   autoFocus
                   required
