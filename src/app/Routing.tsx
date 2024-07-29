@@ -13,7 +13,7 @@ export const Routing = ({ demo = false }: Props) => {
       <>
          <Container>
             <Routes>
-               <Route path={"/second-todolist"} element={<TodolistsList demo={demo} />} />
+               <Route path={"/tasks-planner"} element={<TodolistsList demo={demo} />} />
                <Route path={"/login"} element={<Login />} />
                <Route path={"/error404"} element={<h1>404 page not found</h1>} />
                <Route path={"/*"} element={<Navigate to={"/error404"} />} />

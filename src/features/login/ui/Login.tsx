@@ -25,7 +25,7 @@ export const Login = () => {
    const { isLoggedIn, formik } = useLogin();
 
    if (isLoggedIn) {
-      return <Navigate to={"/second-todolist"} />;
+      return <Navigate to={"/tasks-planner"} />;
    }
 
    return (
