@@ -25,11 +25,11 @@ export const Login = () => {
    const { isLoggedIn, formik } = useLogin();
 
    if (isLoggedIn) {
-      return <Navigate to={"/tasks-planner"} />;
+      return <Navigate to={"/tasksPlanner"} />;
    }
 
    return (
-      <Grid container justifyContent={"center"}>
+      <Grid container justifyContent={"center"} marginTop={"40px"} minHeight={"100vh"}>
          <Grid item justifyContent={"center"}>
             <form onSubmit={formik.handleSubmit}>
                {" "}
@@ -44,8 +44,14 @@ export const Login = () => {
                         </a>
                      </p>
                      <p>or use common test account credentials:</p>
-                     <p>Email: free@samuraijs.com</p>
-                     <p>Password: free</p>
+                     <p>
+                        {" "}
+                        Email: <b>free@samuraijs.com</b>
+                     </p>
+                     <p>
+                        {" "}
+                        Password: <b>free</b>
+                     </p>
                   </FormLabel>
                   <FormGroup>
                      <TextField

@@ -11,7 +11,7 @@ import { AppRootStateType } from "../../app/store";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { authThunks, selectIsLoggedIn } from "../../features/login/model/authSlice";
-
+import WindPowerIcon from "@mui/icons-material/WindPower";
 export const ButtonAppBar = () => {
    const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch();
    const isLoggedIn = useSelector<AppRootStateType, boolean>(selectIsLoggedIn);
@@ -25,7 +25,7 @@ export const ButtonAppBar = () => {
          <AppBar position="static">
             <Toolbar>
                <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-                  <MenuIcon />
+                  <WindPowerIcon />
                </IconButton>
                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                   Tasks Planner

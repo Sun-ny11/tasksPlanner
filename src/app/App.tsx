@@ -6,11 +6,12 @@ import { selectIsInitialized } from "./appSlice";
 import { useDispatch } from "react-redux";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, ThemeProvider } from "@mui/material";
 import { authThunks } from "features/login/model/authSlice";
 import { TaskType } from "features/todolistsLists/api/tasksApi.types";
 import { Routing } from "./Routing";
 import { Header } from "./Header";
+import { theme } from "common/style/theme";
 
 export type taskTodoType = {
    [key: string]: TaskType[];
@@ -37,10 +38,12 @@ function App({ demo = false }: Props) {
    }
 
    return (
-      <div className="App">
-         <Header />
-         <Routing demo={demo} />
-      </div>
+      <ThemeProvider theme={theme}>
+         <div className="App">
+            <Header />
+            <Routing demo={demo} />
+         </div>
+      </ThemeProvider>
    );
 }
 
