@@ -4,6 +4,7 @@ import { todolistsReducer } from "../features/todolistsLists/model/todolistsSlic
 import { appReducer } from "./appSlice";
 import { authReducer } from "../features/login/model/authSlice";
 import { configureStore } from "@reduxjs/toolkit";
+import { themeReducer } from "Components/changeTheme/themeSlice";
 
 // мы задаём структуру нашего единственного объекта-состояния
 
@@ -16,6 +17,7 @@ export const store = configureStore({
       todolists: todolistsReducer,
       app: appReducer,
       auth: authReducer,
+      theme: themeReducer,
    },
 });
 // определить автоматически тип всего объекта состояния

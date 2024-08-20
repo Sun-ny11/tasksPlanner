@@ -11,7 +11,8 @@ import { authThunks } from "features/login/model/authSlice";
 import { TaskType } from "features/todolistsLists/api/tasksApi.types";
 import { Routing } from "./Routing";
 import { Header } from "./Header";
-import { theme } from "common/style/theme";
+import { themeActions } from "Components/changeTheme/themeSlice";
+import { useTheme } from "common/utils/useTheme";
 
 export type taskTodoType = {
    [key: string]: TaskType[];
@@ -25,8 +26,15 @@ function App({ demo = false }: Props) {
    const isInitialized = useSelector<AppRootStateType, boolean>(selectIsInitialized);
    const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch();
 
+   const newTheme = useTheme();
+
    useEffect(() => {
       dispatch(authThunks.initializeApp());
+      const theme = localStorage.getItem("themeColor");
+
+      if (theme) {
+         dispatch(themeActions.changeTheme(JSON.parse(theme)));
+      }
    }, []);
 
    if (!isInitialized) {
@@ -38,7 +46,7 @@ function App({ demo = false }: Props) {
    }
 
    return (
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={newTheme}>
          <div className="App">
             <Header />
             <Routing demo={demo} />

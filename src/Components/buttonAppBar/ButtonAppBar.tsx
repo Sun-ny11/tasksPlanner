@@ -4,14 +4,13 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import { useDispatch, useSelector } from "react-redux";
 import { AppRootStateType } from "../../app/store";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { authThunks, selectIsLoggedIn } from "../../features/login/model/authSlice";
-import WindPowerIcon from "@mui/icons-material/WindPower";
+import ChangeThem from "Components/changeTheme/ChangeThem";
+
 export const ButtonAppBar = () => {
    const dispatch: ThunkDispatch<AppRootStateType, any, AnyAction> = useDispatch();
    const isLoggedIn = useSelector<AppRootStateType, boolean>(selectIsLoggedIn);
@@ -24,9 +23,7 @@ export const ButtonAppBar = () => {
       <Box sx={{ flexGrow: 1 }}>
          <AppBar position="static">
             <Toolbar>
-               <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-                  <WindPowerIcon />
-               </IconButton>
+               <ChangeThem />
                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                   Tasks Planner
                </Typography>
@@ -36,7 +33,7 @@ export const ButtonAppBar = () => {
                   </Button>
                )}
             </Toolbar>
-         </AppBar>
+         </AppBar>{" "}
       </Box>
    );
 };
